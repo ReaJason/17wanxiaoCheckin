@@ -6,8 +6,13 @@ on:
   pull_request:
     branches: [ master ]
   schedule:
+<<<<<<< HEAD
     - cron: 11 11 * * *
 
+=======
+    - cron:  '55 11 * * *'
+      
+>>>>>>> c6a3d89e0bbaddd69e1fed9cc38f5ab163dc34ce
 jobs:
   build:
     runs-on: ubuntu-latest
