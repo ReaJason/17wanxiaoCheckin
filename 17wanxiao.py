@@ -5,16 +5,27 @@ import requests
 
 base_url = "https://reportedh5.17wanxiao.com/sass/api/epmpics"
 
-text = input()
-address = input()
-addtext = input()
-deptId = eval(input())
-userId = input()
-stuNum = input()
-userName = input()
-phoneNum = input()
-emergency = input()
-emergencyPhone = input()
+# text = input()
+# address = input()
+# addtext = input()
+# deptId = eval(input())
+# userId = input()
+# stuNum = input()
+# userName = input()
+# phoneNum = input()
+# emergency = input()
+# emergencyPhone = input()
+
+text = '土木工程学院-测绘工程-2017测绘工程2班'
+address = '云湖桥镇石井铺村永新组'
+addtext = '湖南省-湘潭市-湘潭县'
+deptId = eval('141659')
+userId = '13673775'
+stuNum = '20172987'
+userName = '冯剑平'
+phoneNum = '17377820279'
+emergency = '郑怀玲'
+emergencyPhone = '18674490817'
 
 area = {'address': address, 'text': addtext, 'code': "430321"}
 
