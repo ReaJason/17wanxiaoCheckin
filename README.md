@@ -2,20 +2,41 @@
 
 > 基于Github-Actions的完美校园健康打卡
 
-### 1. Actions具体流程
+⚡因需要会手机抓包基础才能实现（后期有时间再写），所以该项目只作为一个actions的效果展示和项目搭建
 
-tips：actions配置文件\\.github\\workflows\\run.yml中
+### Actions具体流程
 
-#### 1.1 计划时间参数
+<!--tips：actions配置文件在\.github\workflows\run.yml中-->
+
+#### 0 参数设置(secret)
+
+```python
+# 设置如下secret字段
+"""
+TEXT(学院专业班级信息)
+ADDRESS(详细地址)
+ADDTEXT(省-市-县/区)
+DEPTID(未知id字段)
+USERID(完美校园分配的用户id)
+STUNUM(学号)
+USERNAME(姓名)
+PHONENUM(电话)
+EMERGENCY(紧急联系人)
+EMERGENCYPHONE(紧急联系人电话)
+"""
+```
+
+#### 1 计划时间参数
 
 ```python
 schedule:
    - cron: 0 22 * * * # 表示每天6点进行任务
 # cron后面的时间为国际事件
 # 五位数(空格分隔)分别为分钟、小时、天、月、一个星期的第几天
+# 国际时与北京时的查询网站：http://www.timebie.com/cn/universalbeijing.php
 ```
 
-#### 1.2 Install Python
+#### 2 Install Python
 
 ```python
 # 为虚拟机安装python3环境
@@ -25,7 +46,7 @@ run: |
 # 由于使用的是Ubuntu的虚拟机，因此执行的是linux语句
 ```
 
-#### 1.3 requirements
+#### 3 requirements
 
 ```python
 # 为py程序的执行安装第三方库requests
@@ -33,7 +54,7 @@ run: |
     pip3 install -r requirements.txt
 ```
 
-#### 1.4 Checkin
+#### 4 Checkin
 
 ```python
 # 运行py脚本文件
@@ -72,7 +93,7 @@ res = response.text
 print(res)
 ```
 
-#### 1.5 成功截图
+#### 5 成功截图
 
-![image-20200630235249727](C:\Users\15870\Desktop\11\image-20200630235249727.png)
+![成功截图](https://s1.ax1x.com/2020/07/01/NomfVH.png)
 

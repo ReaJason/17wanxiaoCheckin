@@ -6,12 +6,8 @@ on:
   pull_request:
     branches: [ master ]
   schedule:
-<<<<<<< HEAD
-    - cron: 0 22 * * *
-=======
-    - cron: 0 5,22 * * *
->>>>>>> d407923a345feadb565e91e2cd08bc3ed9d574a2
-    
+    - cron: 0 22 * * *    
+ 
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -26,8 +22,19 @@ jobs:
       
     - name: requirements
       run: |
-        pip3 install -r requirements.txt
+        pip3 install -i https://pypi.tuna.tsinghua.edu.cn/simple -r requirements.txt
         
     - name: Checkin
       run: |
-        python3 17wanxiao.py
+	python3 C189Checkin.py <<EOF
+	${{ secrets.TEXT}}
+	${{ secrets.ADDRESS}}
+	${{ secrets.ADDTEXT}}
+	${{ secrets.DEPTID}}
+	${{ secrets.USERID}}
+	${{ secrets.STUNUM}}
+	${{ secrets.USERNAME}}
+	${{ secrets.PHONENUM}}
+	${{ secrets.EMERGENCY}}
+	${{ secrets.EMERGENCYPHONE}}	
+	EOF
