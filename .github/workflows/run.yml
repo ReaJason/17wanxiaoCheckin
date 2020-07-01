@@ -27,15 +27,15 @@ jobs:
     - name: Checkin
       run: |
         python3 17wanxiao.py <<EOF
-        ${${{secrets.TEXT}}}
-        ${${{secrets.ADDRESS}}}
-        ${${{secrets.ADDTEXT}}}
-        ${${{secrets.DEPTID}}}
-        ${${{secrets.USERID}}}
-        ${${{secrets.STUNUM}}}
-        ${${{secrets.USERNAME}}}
-        ${${{secrets.PHONENUM}}}
-        ${${{secrets.EMERGENCY}}}
-        ${${{secrets.EMERGENCYPHONE}}}
+        ${{secrets.TEXT}}
+        ${{secrets.ADDRESS}}
+        ${{secrets.ADDTEXT}}
+        ${{secrets.DEPTID}}
+        ${{secrets.USERID}}
+        ${{secrets.STUNUM}}
+        ${{secrets.USERNAME}}
+        ${{secrets.PHONENUM}}
+        ${{secrets.EMERGENCY}}
+        ${{secrets.EMERGENCYPHONE}}
         EOF
         
