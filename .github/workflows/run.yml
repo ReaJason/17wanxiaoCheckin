@@ -22,9 +22,20 @@ jobs:
       
     - name: requirements
       run: |
-        pip3 install -r requirements.txt
+        pip3 install  -i https://pypi.tuna.tsinghua.edu.cn/simple -r requirements.txt
         
     - name: Checkin
       run: |
-      	echo '${{secrets.TEXT}}'
-
+        python3 17wanxiao.py <<EOF
+        ${${{secret.TEXT}}}
+        ${${{secret.ADDRESS}}}
+        ${${{ secrets.ADDTEXT}}}
+        ${${{ secrets.DEPTID}}}
+        ${${{ secrets.USERID}}}
+        ${${{ secrets.STUNUM}}}
+        ${${{ secrets.USERNAME}}}
+        ${${{ secrets.PHONENUM}}}
+        ${${{ secrets.EMERGENCY}}}
+        ${${{ secrets.EMERGENCYPHONE}}}
+        EOF
+        
