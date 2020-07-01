@@ -22,7 +22,7 @@ jobs:
       
     - name: requirements
       run: |
-        pip3 install -i https://pypi.tuna.tsinghua.edu.cn/simple -r requirements.txt
+        pip3 install -r requirements.txt
         
     - name: Checkin
       run: |
@@ -35,7 +35,9 @@ jobs:
 	username = '${{ secrets.USERNAME}}'
 	phonenum = '${{ secrets.PHONENUM}}'
 	emergency = '${{ secrets.EMERGENCY}}'
-	emergencyphone = '${{ secrets.EMERGENCYPHONE}}	'
+	emergencyphone = '${{ secrets.EMERGENCYPHONE}}'
+	
+	do
 	python3 17wanxiao.py <<EOF
 	${text}
 	${address}
@@ -47,3 +49,4 @@ jobs:
 	${emergency}
 	${emergencyphone}
 	EOF
+	done
