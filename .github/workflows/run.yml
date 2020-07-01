@@ -28,6 +28,3 @@ jobs:
       run: |
       	echo '${{secrets.TEXT}}'
 
-	python3 17wanxiao.py <<EOF
-	${{secrets.TEXT}}
-	EOF
