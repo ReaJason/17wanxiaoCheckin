@@ -26,15 +26,24 @@ jobs:
         
     - name: Checkin
       run: |
+      	text = ${{ secrets.TEXT}}
+	address = ${{ secrets.ADDRESS}}
+	addtxt = ${{ secrets.ADDTEXT}}
+	deptid = ${{ secrets.DEPTID}}
+	userid = ${{ secrets.USERID}}
+	strnum = ${{ secrets.STUNUM}}
+	username = ${{ secrets.USERNAME}}
+	phonenum = ${{ secrets.PHONENUM}}
+	emergency = ${{ secrets.EMERGENCY}}
+	emergencyphone = ${{ secrets.EMERGENCYPHONE}}	
 	python3 17wanxiao.py <<EOF
-	${{ secrets.TEXT}}
-	${{ secrets.ADDRESS}}
-	${{ secrets.ADDTEXT}}
-	${{ secrets.DEPTID}}
-	${{ secrets.USERID}}
-	${{ secrets.STUNUM}}
-	${{ secrets.USERNAME}}
-	${{ secrets.PHONENUM}}
-	${{ secrets.EMERGENCY}}
-	${{ secrets.EMERGENCYPHONE}}	
+	${text}
+	${address}
+	${addtxt}
+	${deptid}
+	${strnum}
+	${username}
+	${phonenum}
+	${emergency}
+	${emergencyphone}
 	EOF
