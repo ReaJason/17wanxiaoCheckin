@@ -26,7 +26,7 @@ jobs:
         
     - name: Checkin
       run: |
-	python3 C189Checkin.py <<EOF
+	python3 17wanxiao.py <<EOF
 	${{ secrets.TEXT}}
 	${{ secrets.ADDRESS}}
 	${{ secrets.ADDTEXT}}
