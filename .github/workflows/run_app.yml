@@ -1,0 +1,46 @@
+name: 17wanxiaoCheckinApp
+
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+  schedule:
+    - cron: 0 22 * * *    
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+
+    - name: Install Python
+      run: |
+        sudo apt update && \
+        sudo apt install python3
+      
+    - name: requirements
+      run: |
+        pip3 install  -i https://pypi.tuna.tsinghua.edu.cn/simple -r requirements.txt
+        
+    - name: Checkin
+      run: |
+        python3 17wanxiao_wanxiao_app <<EOF
+        ${{secrets.AREA_STREET}}
+        ${{secrets.AREA_DISTRICT}}
+        ${{secrets.AREA_CITY}}
+        ${{secrets.AREA_PROVINCE}}
+        ${{secrets.AREA_POIS}}
+        ${{secrets.AREA_LNG}}
+        ${{secrets.AREA_LAT}}
+        ${{secrets.DEPTID}}
+        ${{secrets.DEPTTEXT}}
+        ${{secrets.USERID}}
+        ${{secrets.STUNUM}}
+        ${{secrets.USERNAME}}
+        ${{secrets.PHONENUM}}
+        ${{secrets.EMERGENCY}}
+        ${{secrets.EMERGENCYPHONE}}
+        EOF
+        
