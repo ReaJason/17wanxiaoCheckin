@@ -1,7 +1,12 @@
-import requests, random, json, hashlib
+import random
+import json
+import hashlib
+import requests
+import urllib3
+import logging
+
 from login import des_3
 from login import rsa_encrypt as rsa
-import urllib3
 
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
@@ -101,28 +106,14 @@ class CampusCard:
             json=upload_args,
             verify=False
         ).json()
+        # {'result_': False, 'message_': '该手机号未注册完美校园', 'code_': '4'}
+        # {'result_': False, 'message_': '密码错误,您还有4次机会!', 'code_': '5'}
+        # {'result_': True, 'data': '*********', 'message_': '登录成功', 'code_': '0'}
+        # {'result_': False, 'message_': '密码输入错误次数过多，帐号已被限制，请于24小时后再试', 'code_': '5'}
         if resp["result_"]:
+            logging.info(f"{phone}：{resp['message_']}")
             self.data = resp["data"]
             self.user_info["login"] = True
             self.user_info["exchangeFlag"] = False
-        return self.user_info["sessionId"]
-
-    def get_user_school_info(self):
-        token = {'token': self.user_info['sessionId']}
-        sign_url = "https://reportedh5.17wanxiao.com/api/clock/school/getUserInfo"
-        response = requests.post(sign_url, data=token)
-        user_dict = {
-            "token": self.user_info['sessionId'],
-            "userid": response.json()['userInfo']['userId'],
-            "customerid": response.json()['userInfo']['customerId'],
-            "deptid": response.json()['userInfo']['classId'],
-            "stuNo": response.json()['userInfo']['stuNo'],
-            "username": response.json()['userInfo']['username'],
-            "text": response.json()['userInfo']['classDescription']
-        }
-        return user_dict
-
-
-if __name__ == '__main__':
-    campus = CampusCard("", "")
-    print(campus.get_user_school_info())
+        else:
+            logging.warning(f"{phone}：{resp['message_']}")
