@@ -1,3 +1,4 @@
+
 import time
 import datetime
 import json
@@ -120,18 +121,14 @@ class HealthyCheckIn(object):
 """)
 
     def server_push(self, desp):
-        headers = {"Content-type": "application/x-www-form-urlencoded; charset=UTF-8"}
         send_url = f"https://sc.ftqq.com/{self.sckey}.send"
         params = {
             "text": "健康打卡推送通知",
             "desp": desp
         }
         # 发送消息
-        response = requests.post(send_url, data=params, headers=headers)
-        if response.json()["errmsg"] == 'success':
-            logging.info('Server酱推送服务成功')
-        else:
-            logging.warning('Server酱推送服务失败')
+        requests.post(send_url, data=params)
+        logging.info('Server酱推送服务成功')
 
 
 if __name__ == '__main__':

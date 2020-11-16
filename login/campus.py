@@ -28,8 +28,6 @@ class CampusCard:
         if self.user_info['exchangeFlag']:
             self.exchange_secret()
             self.login(phone, password)
-        with open(user_info[1].format(phone), 'w') as f:
-            f.write(self.save_user_info())
 
     @staticmethod
     def __create_blank_user__():
