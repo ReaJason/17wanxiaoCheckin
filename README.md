@@ -1,8 +1,8 @@
-# 🌟17wanxiaoCheckin
+# 🌈17wanxiaoCheckin-Actions
 
 
 
-**⚡2020.11.15：本项目已更新，使用本项目，你不需要抓包就可以使用（理论上大概......）**
+**⚡2020.11.16：本项目已更新，使用本项目，你不需要抓包就可以使用（理论上大概......）**
 
 [中南林业科技大学](https://www.csuft.edu.cn/) 测试可用，欢迎大家 fork 测试使用，如果可用的话，可以开 [issue](https://github.com/ReaJason/17wanxiaoCheckin-Actions/issues) 让更多人知道
 
@@ -28,15 +28,19 @@
 本项目也就不起作用了，可以试试打一次卡然后再进入看有无自动填充信息。
 
 ```python
-def get_post_json(self, token):
+    def get_post_json(self, token):
         jsons = {"businessType": "epmpics",
                  "jsonData": {"templateid": "pneumonia", "token": token},
                  "method": "userComeApp"}
         try:
-            res = requests.post(url="https://reportedh5.17wanxiao.com/sass/api/epmpics", json=jsons)
+            # 如果不请求一下这个地址，token就会失效
+            requests.post("https://reportedh5.17wanxiao.com/api/clock/school/getUserInfo", data={'token': token})
+            res = requests.post(url="https://reportedh5.17wanxiao.com/sass/api/epmpics", json=jsons).json()
         except:
             return None
-        data = json.loads(res.json()['data'])
+        if res['code'] != '10000':
+            return None
+        data = json.loads(res['data'])
         post_dict = {
             "areaStr": data['areaStr'],
             "deptStr": data['deptStr'],
@@ -63,8 +67,8 @@ def get_post_json(self, token):
 
 1. 请先确保进入健康打卡界面，信息能够自动填写
 2. 点击右上角的 fork，fork 本项目到自己仓库中
-3. 设置三个 secrets 字段：USERNAME、PASSWORD、SCKEY
+3. 设置三个 secrets 字段：USERNAME、PASSWORD、SCKEY（对应就是账号，密码以及 Server 酱）
 4. 开启 Actions，修改 README.md 测试一次
 
 
- 
+
