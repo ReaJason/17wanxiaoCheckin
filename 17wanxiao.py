@@ -28,6 +28,8 @@ class HealthyCheckIn(object):
             res = requests.post(url=self.check_url, json=jsons).json()
         except:
             return None
+        if res['code'] != '10000':
+            return None
         data = json.loads(res['data'])
         post_dict = {
             "areaStr": data['areaStr'],
