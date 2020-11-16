@@ -25,6 +25,8 @@ class HealthyCheckIn(object):
                  "jsonData": {"templateid": "pneumonia", "token": token},
                  "method": "userComeApp"}
         try:
+            # 如果不请求一下这个地址，token就会失效
+            requests.post("https://reportedh5.17wanxiao.com/api/clock/school/getUserInfo", data={'token': token})
             res = requests.post(url=self.check_url, json=jsons).json()
         except:
             return None
@@ -53,11 +55,11 @@ class HealthyCheckIn(object):
     def check_in(self):
         # 模拟登录获取token
         user_dict = CampusCard(self.lg_username, self.lg_password).user_info
+        token = user_dict["sessionId"]
         if not user_dict['login']:
             return None
-
         # 获取post提交的字段
-        post_dict = self.get_post_json(user_dict['sessionId'])
+        post_dict = self.get_post_json(token)
         if not post_dict:
             logging.warning('获取完美校园打卡post参数失败')
             return None
@@ -70,16 +72,16 @@ class HealthyCheckIn(object):
                                    "templateid": post_dict['templateid'], "stuNo": post_dict['stuNo'],
                                    "username": post_dict['username'], "phonenum": self.lg_username,
                                    "userid": post_dict['userid'], "updatainfo": post_dict['updatainfo'],
-                                   "gpsType": 1, "token": user_dict['sessionId']},
+                                   "gpsType": 1, "token": token},
                       }
         response = requests.post(self.check_url, json=check_json)
 
         # 以json格式打印json字符串
         res = json.dumps(response.json(), sort_keys=True, indent=4, ensure_ascii=False)
-        if response.json()['code'] == '10000':
-            logging.info(res)
-        else:
+        if response.json()['code'] != '10000':
             logging.warning(res)
+        else:
+            logging.info(res)
 
         # 拼接微信推送输出
         now_time = datetime.datetime.now()
