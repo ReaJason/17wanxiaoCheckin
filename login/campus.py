@@ -10,7 +10,6 @@ from login import rsa_encrypt as rsa
 
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
-
 class CampusCard:
     """
     完美校园APP
@@ -18,17 +17,19 @@ class CampusCard:
     """
     data = None
 
-    def __init__(self, phone, password):
+    def __init__(self, phone, password, user_info=(None, '{}.info')):
         """
         初始化一卡通类
         :param phone: 完美校园账号
         :param password: 完美校园密码
         :param user_info: 已登录的虚拟设备
         """
-        self.user_info = self.__create_blank_user__()
+        self.user_info = user_info[0] if user_info[0] else self.__create_blank_user__()
         if self.user_info['exchangeFlag']:
             self.exchange_secret()
             self.login(phone, password)
+        with open(user_info[1].format(phone), 'w') as f:
+            f.write(self.save_user_info())
 
     @staticmethod
     def __create_blank_user__():
@@ -114,4 +115,80 @@ class CampusCard:
             self.user_info["login"] = True
             self.user_info["exchangeFlag"] = False
         else:
-            logging.warning(f"{phone}：{resp['message_']}")
+            logging.info(f"{phone}：{resp['message_']}")    
+        return resp["result_"]
+
+    def get_bill(self, from_date, end_date):
+        """
+        获取指定日期范围内的校园卡消费记录
+        :param from_date: 查询开始日期
+        :param end_date: 查询结束日期
+        :return: 查询结果
+        """
+        resp = requests.post(
+            "http://server.17wanxiao.com/YKT_Interface/xyk",
+            headers={
+                "Referer": "http://server.17wanxiao.com/YKT_Interface/v2/index.html"
+                           "?utm_source=app"
+                           "&utm_medium=plugin"
+                           "&UAinfo=wanxiao"
+                           "&versioncode={args[wanxiaoVersion]}"
+                           "&customerId=504"
+                           "&systemType=Android"
+                           "&token={args[sessionId]}".format(args=self.user_info),
+                "Origin": "http://server.17wanxiao.com",
+                "User-Agent": "Mozilla/5.0 (Linux; Android 5.1.1; HUAWEI MLA-AL10 Build/HUAWEIMLA-AL10; wv) "
+                              "AppleWebKit/537.36 (KHTML, like Gecko) Version/4.0 Chrome/74.0.3729.136 Mobile "
+                              "Safari/537.36 Wanxiao/4.6.2",
+            },
+            data={
+                "token": self.user_info["sessionId"],
+                "method": "XYK_TRADE_DETAIL",
+                "param": '{"beginDate":"' + from_date + '","endDate":"' + end_date + '","beginIndex":0,"count":20}'
+            },
+            verify=False
+        ).json()
+        return json.loads(resp["body"])
+
+    def get_main_info(self):
+        resp = requests.post(
+            "https://server.17wanxiao.com/YKT_Interface/xyk",
+            headers={
+                "Referer": "https://server.17wanxiao.com/YKT_Interface/v2/index.html"
+                           "?utm_source=app"
+                           "&utm_medium=card"
+                           "&UAinfo=wanxiao"
+                           "&versioncode={args[wanxiaoVersion]}"
+                           "&customerId=504"
+                           "&systemType=Android"
+                           "&token={args[sessionId]}".format(args=self.user_info),
+                "Origin": "https://server.17wanxiao.com",
+                "User-Agent": "Mozilla/5.0 (Linux; Android 5.1.1; HUAWEI MLA-AL10 Build/HUAWEIMLA-AL10; wv) "
+                              "AppleWebKit/537.36 (KHTML, like Gecko) Version/4.0 Chrome/74.0.3729.136 Mobile "
+                              "Safari/537.36 Wanxiao/4.6.2",
+            },
+            data={
+                "token": self.user_info["sessionId"],
+                "method": "XYK_BASE_INFO",
+                "param": "{}"
+            },
+            verify=False
+        ).json()
+        return json.loads(resp["body"])
+
+    def save_user_info(self):
+        """
+        保存当前的设备信息
+        :return: 当前设备信息的json字符串
+        """
+        return json.dumps(self.user_info)
+
+
+def open_device(f):
+    try:
+        device_file = open(f, "r")
+        device = json.loads(device_file.read())
+        device_file.close()
+    except:
+        device = None
+    return device, f
