@@ -15,8 +15,8 @@ def initLogging():
 
 class HealthyCheckIn(object):
     def __init__(self):
-        # self.lg_username = input()
-        # self.lg_password = input()
+        self.lg_username = input()
+        self.lg_password = input()
         self.sckey = input()
         self.check_url = "https://reportedh5.17wanxiao.com/sass/api/epmpics"
         initLogging()
