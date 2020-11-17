@@ -137,5 +137,4 @@ class HealthyCheckIn(object):
 
 
 if __name__ == '__main__':
-    # HealthyCheckIn().check_in()
-    HealthyCheckIn().server_push("")
+    HealthyCheckIn().check_in()
