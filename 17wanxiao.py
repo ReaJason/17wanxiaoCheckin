@@ -129,11 +129,14 @@ class HealthyCheckIn(object):
         # 发送消息
         res = requests.post(send_url, data=params)
         # {"errno":0,"errmsg":"success","dataset":"done"}
-        logging.info(res.text)
-        if not res.json()['errno']:
-            logging.info('Server酱推送服务成功')
-        else:
-            logging.warning('Server酱推送服务失败')
+        # logging.info(res.text)
+        try:
+            if not res.json()['errno']:
+                logging.info('Server酱推送服务成功')
+            else:
+                logging.warning('Server酱推送服务失败')
+        except:
+            logging.warning("Server酱不起作用了，可能是你的sckey出现了问题")
 
 
 if __name__ == '__main__':
