@@ -15,8 +15,8 @@ def initLogging():
 
 class HealthyCheckIn(object):
     def __init__(self):
-        self.lg_username = input()
-        self.lg_password = input()
+        # self.lg_username = input()
+        # self.lg_password = input()
         self.sckey = input()
         self.check_url = "https://reportedh5.17wanxiao.com/sass/api/epmpics"
         initLogging()
@@ -127,9 +127,15 @@ class HealthyCheckIn(object):
             "desp": desp
         }
         # 发送消息
-        requests.post(send_url, data=params)
-        logging.info('Server酱推送服务成功')
+        res = requests.post(send_url, data=params)
+        # {"errno":0,"errmsg":"success","dataset":"done"}
+        logging.info(res.text)
+        if not res['errno']:
+            logging.info('Server酱推送服务成功')
+        else:
+            logging.warning('Server酱推送服务失败')
 
 
 if __name__ == '__main__':
-    HealthyCheckIn().check_in()
+    # HealthyCheckIn().check_in()
+    HealthyCheckIn().server_push("")
