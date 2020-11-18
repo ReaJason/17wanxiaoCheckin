@@ -8,7 +8,7 @@
 
 感谢 [@zhongbr](https://github.com/zhongbr) 的完美校园逆向登录分析代码的分享：[完美校园模拟登录](https://github.com/zhongbr/wanmei_campus)
 
-之前的抓包部署教程请前往：[完美校园抓包打卡](https://reajason.top/2020/06/28/17wanxiaoCheckin/)
+之前的抓包部署教程请前往：[完美校园抓包打卡](https://github.com/ReaJason/17wanxiaoCheckin-Actions/blob/master/README_LAST.md)
 
 
 
