@@ -57,6 +57,7 @@
                          data['cusTemplateRelations']],
         }
         # print(json.dumps(post_dict, sort_keys=True, indent=4, ensure_ascii=False))
+        # 在这里修改没有填写的数据，遍历post_dict['updatainfo']修改就行
         logging.info('获取完美校园打卡post参数成功')
         return post_dict
 ```
@@ -65,10 +66,22 @@
 
 #### 三、使用方法
 
-1. 请先确保进入健康打卡界面，信息能够自动填写
+1. 请先确保进入健康打卡界面，信息能够正确的自动填写（没有自动填写的项，可以自行修改代码）
 2. 点击右上角的 fork，fork 本项目到自己仓库中
-3. 设置三个 secrets 字段：USERNAME、PASSWORD、SCKEY（对应就是账号，密码以及 Server 酱）
-4. 开启 Actions，修改 README.md 测试一次
+   - ![](https://cdn.jsdelivr.net/gh/ReaJason/17wanxiaoCheckin-Actions/Pictures/click_fork.png)
+3. 开启Actions
+   - ![](https://cdn.jsdelivr.net/gh/ReaJason/17wanxiaoCheckin-Actions/Pictures/start_action.png)
+   - ![](https://cdn.jsdelivr.net/gh/ReaJason/17wanxiaoCheckin-Actions/Pictures/end_actions.png)
+4. 设置三个 secrets 字段：USERNAME、PASSWORD、SCKEY（对应就是账号，密码以及 Server 酱）
+   - ![](https://cdn.jsdelivr.net/gh/ReaJason/17wanxiaoCheckin-Actions/Pictures/new_secrets.png)
+   - ![](https://cdn.jsdelivr.net/gh/ReaJason/17wanxiaoCheckin-Actions/Pictures/secrets_details.png)
+   - ![](https://cdn.jsdelivr.net/gh/ReaJason/17wanxiaoCheckin-Actions/Pictures/end_secrets.png)
+5. 修改 README.md 测试一次
+   - ![](https://cdn.jsdelivr.net/gh/ReaJason/17wanxiaoCheckin-Actions/Pictures/modify_readme.png)
+   - ![](https://cdn.jsdelivr.net/gh/ReaJason/17wanxiaoCheckin-Actions/Pictures/end_modify.png)
+6. 查看Actions运行情况，以及微信推送情况，至此每日六点多将会自行打卡
+   - ![](https://cdn.jsdelivr.net/gh/ReaJason/17wanxiaoCheckin-Actions/Pictures/check_status.png)
+   - ![](https://cdn.jsdelivr.net/gh/ReaJason/17wanxiaoCheckin-Actions/Pictures/end_check.png)
 
 
 
