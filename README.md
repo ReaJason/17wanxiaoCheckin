@@ -2,6 +2,8 @@
 
 
 
+**💫2020.11.23：支持多人打卡，重写了一下代码**
+
 **⚡2020.11.16：本项目已更新，使用本项目，你不需要抓包就可以使用（理论上大概......）**
 
 [中南林业科技大学](https://www.csuft.edu.cn/) 测试可用，欢迎大家 fork 测试使用，如果可用的话，可以开 [issue](https://github.com/ReaJason/17wanxiaoCheckin-Actions/issues) 让更多人知道
@@ -68,7 +70,7 @@ def get_post_json(self, token):
 
 1. 请先确保进入健康打卡界面，信息能够正确的自动填写（没有自动填写的项，可以自行修改代码）
 
-2. 点击右上角的 fork，fork 本项目到自己仓库中
+2. 点击右上角的 `fork`，`fork` 本项目到自己仓库中
 
    
 
@@ -76,7 +78,7 @@ def get_post_json(self, token):
 
    
 
-3. 开启Actions
+3. 开启 `Actions`
 
    
 
@@ -88,7 +90,12 @@ def get_post_json(self, token):
 
    
 
-4. 设置三个 secrets 字段：USERNAME、PASSWORD、SCKEY（对应就是账号，密码以及 Server 酱）
+4. 设置三个 `secrets`  字段：`USERNAME`、`PASSWORD`、`SCKEY`（对应就是账号，密码以及 Server 酱）
+
+   1. 如果是多人打卡的话：
+      - USERNAME字段：手机号1,手机号2,......（与下面密码对应），例如：`1737782***,13602***`
+      - PASSWORD字段：密码1,密码2,......  （与上面账号对应），例如：`123456,456789`
+      - SCKEY字段：填写一个即可，例如：`SCU90543*******`
 
    
 
@@ -104,7 +111,7 @@ def get_post_json(self, token):
 
    
 
-5. 修改 README.md 测试一次
+5. 修改 `README.md` 测试一次
 
    
 
@@ -116,7 +123,7 @@ def get_post_json(self, token):
 
    
 
-6. 查看Actions运行情况，以及微信推送情况，至此每日六点多将会自行打卡
+6. 查看 `Actions` 运行情况，以及微信推送情况，至此每日六点多将会自行打卡
 
    
 
