@@ -108,12 +108,12 @@ class CampusCard:
             verify=False
         ).json()
         if resp["result_"]:
-            logging.info(f"{phone}：{resp['message_']}")
+            logging.info(f"{phone[:4]}：{resp['message_']}")
             self.data = resp["data"]
             self.user_info["login"] = True
             self.user_info["exchangeFlag"] = False
         else:
-            logging.info(f"{phone}：{resp['message_']}")    
+            logging.info(f"{phone[:4]}：{resp['message_']}")
         return resp["result_"]
 
     def get_bill(self, from_date, end_date):
