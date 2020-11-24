@@ -58,50 +58,6 @@ def get_post_json(token):
     return None
 
 
-def single_check(username, password, sckey):
-    check_dict = check_in(username, password)
-    if not check_dict['status']:
-        server_push(sckey, check_dict['errmsg'])
-    res = check_dict['res']
-    post_dict = check_dict['post_dict']
-    check_json = check_dict['check_json']
-    # 拼接微信推送输出
-    now_time = datetime.datetime.now()
-    bj_time = now_time + datetime.timedelta(hours=8)
-    test_day = datetime.datetime.strptime('2020-12-26 00:00:00', '%Y-%m-%d %H:%M:%S')
-    post_msg = "\n".join([f"| {i['description']} | {i['value']} |" for i in post_dict['checkbox']])
-    date = (test_day - bj_time).days
-    server_push(sckey, f"""
-------
-#### 现在时间：
-```
-{bj_time.strftime("%Y-%m-%d %H:%M:%S %p")}
-```
-#### json字段：
-```
-{json.dumps(check_json, sort_keys=True, indent=4, ensure_ascii=False)}
-```
-#### 打卡信息：
-------
-| Text                           | Message |
-| :----------------------------------- | :--- |
-{post_msg}
-------
-```
-{res}
-```
-### ⚡考研倒计时:
-```
-{date}天
-```
-
->
-> [GitHub项目地址](https://github.com/ReaJason/17wanxiaoCheckin-Actions)
->
->期待你给项目的star✨
-""")
-
-
 def check_in(username, password):
     token = get_token(username, password)
     if not token:
@@ -126,7 +82,7 @@ def check_in(username, password):
     try:
         response = requests.post("https://reportedh5.17wanxiao.com/sass/api/epmpics", json=check_json)
     except:
-        errmsg = f"{username}，打卡请求出错"
+        errmsg = f"```{username}，打卡请求出错```"
         logging.warning(errmsg)
         return dict(status=0, errmsg=errmsg)
 
@@ -161,30 +117,51 @@ def server_push(sckey, desp):
 
 def run():
     initLogging()
-    check_type = "1"
-    if check_type == "0":
-        username = input()
-        password = input()
-        sckey = input()
-        single_check(username, password, sckey)
-    if check_type == "1":
-        log_info = ['------']
-        username_list = input().split(',')
-        password_list = input().split(',')
-        sckey = input()
-        for username, password in zip([i.strip() for i in username_list if i != ''],
-                                      [i.strip() for i in password_list if i != '']):
-            chech_dict = check_in(username, password)
-            if not chech_dict['status']:
-                log_info.append(chech_dict['errmsg'])
-            else:
-                msg = f"""#### {chech_dict['post_dict']['username']}打卡信息：
+    now_time = datetime.datetime.now()
+    bj_time = now_time + datetime.timedelta(hours=8)
+    test_day = datetime.datetime.strptime('2020-12-26 00:00:00', '%Y-%m-%d %H:%M:%S')
+    date = (test_day - bj_time).days
+    log_info = [f"""
+------
+#### 现在时间：
+```
+{bj_time.strftime("%Y-%m-%d %H:%M:%S %p")}
+```"""]
+    username_list = input().split(',')
+    password_list = input().split(',')
+    sckey = input()
+    for username, password in zip([i.strip() for i in username_list if i != ''],
+                                  [i.strip() for i in password_list if i != '']):
+        chech_dict = check_in(username, password)
+        if not chech_dict['status']:
+            log_info.append(chech_dict['errmsg'])
+        else:
+            post_msg = "\n".join([f"| {i['description']} | {i['value']} |" for i in chech_dict['post_dict']['checkbox']])
+            log_info.append(f"""#### {chech_dict['post_dict']['username']}打卡json字段：
+```
+{json.dumps(chech_dict['check_json'], sort_keys=True, indent=4, ensure_ascii=False)}
+```
+#### {chech_dict['post_dict']['username']}打卡信息：
+------
+| Text                           | Message |
+| :----------------------------------- | :--- |
+{post_msg}
+------
 ```
 {chech_dict['res']}
 ```
-"""
-                log_info.append(msg)
-        server_push(sckey, "\n".join(log_info))
+            """)
+    log_info.append(f"""### ⚡考研倒计时:
+```
+{date}天
+```
+
+>
+> [GitHub项目地址](https://github.com/ReaJason/17wanxiaoCheckin-Actions)
+>
+>期待你给项目的star✨
+""")
+    server_push(sckey, "\n".join(log_info))
 
 
 if __name__ == '__main__':
