@@ -61,13 +61,13 @@ def get_post_json(token):
 def check_in(username, password):
     token = get_token(username, password)
     if not token:
-        errmsg = f"{username}，获取token失败，打卡失败"
+        errmsg = f"{username[:4]}，获取token失败，打卡失败"
         logging.warning(errmsg)
         return dict(status=0, errmsg=errmsg)
 
     post_dict = get_post_json(token)
     if not post_dict:
-        errmsg = f'{username}，获取完美校园打卡post参数失败'
+        errmsg = f'{username[:4]}，获取完美校园打卡post参数失败'
         logging.warning(errmsg)
         return dict(status=0, errmsg=errmsg)
     check_json = {"businessType": "epmpics", "method": "submitUpInfo",
