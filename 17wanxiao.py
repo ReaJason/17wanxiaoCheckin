@@ -186,9 +186,10 @@ def server_push(sckey, desp):
 
 
 def get_ap():
-    am = 0 <= datetime.datetime.now().hour < 12
-    pm = 12 <= datetime.datetime.now().hour < 17
-    ev = 17 <= datetime.datetime.now().hour < 23
+    now_time = datetime.datetime.now() + datetime.timedelta(hours=8)
+    am = 0 < now_time.hour < 12
+    pm = 12 < now_time.hour < 17
+    ev = 17 < now_time.hour < 23
     return [am, pm, ev]
 
 
