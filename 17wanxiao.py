@@ -95,6 +95,7 @@ def campus_check_in(username, token, post_dict, id):
                                "customerAppTypeRuleId": id, "clockState": 0, "token": token},
                   "token": token
                   }
+    # print(check_json)
     try:
         res = requests.post("https://reportedh5.17wanxiao.com/sass/api/epmpics", json=check_json).json()
     except BaseException:
@@ -114,6 +115,7 @@ def campus_check_in(username, token, post_dict, id):
 def check_in(username, password):
     # 登录获取token用于打卡
     token = get_token(username, password)
+    # print(token)
     check_dict_list = []
     # 获取现在是上午，还是下午，还是晚上
     ape_list = get_ap()
@@ -141,12 +143,14 @@ def check_in(username, password):
 
     # 获取校内打卡ID
     id_list = get_id_list(token)
+    # print(id_list)
     if not id_list:
         return check_dict_list
 
     # 校内打卡
     for index, i in enumerate(id_list):
         if ape_list[index]:
+            # print(i)
             logging.info(f"-------------------------------{i['templateid']}-------------------------------")
             json2 = {"businessType": "epmpics",
                      "jsonData": {"templateid": i['templateid'], "customerAppTypeRuleId": i['id'],
@@ -185,11 +189,25 @@ def server_push(sckey, desp):
         logging.warning("Server酱不起作用了，可能是你的sckey出现了问题")
 
 
+def get_id_list(token):
+    post_data = {
+        "customerAppTypeId": 175,
+        "longitude": "",
+        "latitude": "",
+        "token": token
+    }
+    try:
+        res = requests.post("https://reportedh5.17wanxiao.com/api/clock/school/rules", data=post_data)
+        return res.json()['customerAppTypeDto']['ruleList']
+    except:
+        return None
+
+
 def get_ap():
     now_time = datetime.datetime.now() + datetime.timedelta(hours=8)
     am = 0 <= now_time.hour < 12
     pm = 12 <= now_time.hour < 17
-    ev = 17 <= now_time.hour < 23
+    ev = 17 <= now_time.hour <= 23
     return [am, pm, ev]
 
 
@@ -241,22 +259,6 @@ def run():
 >期待你给项目的star✨
 """)
     server_push(sckey, "\n".join(log_info))
-
-
-def get_id_list(token):
-    post_data = {
-        "appClassify": "DK",
-        "token": token
-    }
-    try:
-        res = requests.post("https://reportedh5.17wanxiao.com/api/clock/school/childApps", data=post_data)
-        if res.json()['appList']:
-            res_dict = [{'id': j['id'], "templateid": f"clockSign{i + 1}"} for i, j in
-                        enumerate(res.json()['appList'][-1]['customerAppTypeRuleList'])]
-            return res_dict
-        return False
-    except BaseException:
-        return False
 
 
 if __name__ == '__main__':
