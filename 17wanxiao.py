@@ -134,12 +134,10 @@ def check_in(username, password):
         errmsg = '获取完美校园打卡post参数失败'
         logging.warning(errmsg)
         return False
-    if ape_list[0]:
-        # 健康打卡
-        healthy_check_dict = healthy_check_in(username, token, post_dict)
-        check_dict_list.append(healthy_check_dict)
-    else:
-        logging.info("现在不是上午了，我不要健康打卡！！！")
+
+    # 健康打卡
+    healthy_check_dict = healthy_check_in(username, token, post_dict)
+    check_dict_list.append(healthy_check_dict)
 
     # 获取校内打卡ID
     id_list = get_id_list(token)
