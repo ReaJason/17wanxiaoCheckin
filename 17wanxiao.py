@@ -140,7 +140,7 @@ def check_in(username, password):
     check_dict_list.append(healthy_check_dict)
 
     # 获取校内打卡ID
-    id_list = get_id_list(token)
+    id_list = get_id_list_v1(token)
     # print(id_list)
     if not id_list:
         return check_dict_list
@@ -199,6 +199,22 @@ def get_id_list(token):
         return res.json()['customerAppTypeDto']['ruleList']
     except:
         return None
+
+
+def get_id_list_v1(token):
+    post_data = {
+        "appClassify": "DK",
+        "token": token
+    }
+    try:
+        res = requests.post("https://reportedh5.17wanxiao.com/api/clock/school/childApps", data=post_data)
+        if res.json()['appList']:
+            id_list = sorted(res.json()['appList'][-1]['customerAppTypeRuleList'], key=lambda x: x['id'])
+            res_dict = [{'id': j['id'], "templateid": f"clockSign{i + 1}"} for i, j in enumerate(id_list)]
+            return res_dict
+        return False
+    except BaseException:
+        return False
 
 
 def get_ap():

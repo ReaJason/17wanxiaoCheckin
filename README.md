@@ -2,7 +2,9 @@
 
 
 
-**🦄2020.12.2：更新校内打卡，（健康打卡，校内打卡）我全都要！**
+**🤺2020.12.04：缝缝补补又几天，欢迎fork使用，感谢反馈，好用别忘记点个star✨**
+
+**🦄2020.12.02：更新校内打卡，（健康打卡，校内打卡）我全都要！**
 
 **💫2020.11.23：支持多人打卡，重写了一下代码**
 
@@ -16,14 +18,74 @@
 
 
 
+## Q&A
+
+**1、fork之后，修改README.md并没有触发actions**？
+
+请进入 Actions，Enable workflow
+
+![enable](https://cdn.jsdelivr.net/gh/LingSiKi/images/img/enable.png)
+
+
+
+**2、提交信息中有一部分信息无法自动填写，我不会代码怎么办？**
+
+啊这，这只能修改代码加入我们想要设置的值，请进入17wanxiao.py找到地方按如下修改代码，
+`由于python的缩进很严格，所以建议复制粘贴修改`
+
+```python
+# 获取健康打卡的参数
+json1 = {"businessType": "epmpics",
+        "jsonData": {"templateid": "pneumonia", "token": token},
+        "method": "userComeApp"}
+post_dict = get_post_json(token, json1)
+
+for j in post_dict['updatainfo']:  # 这里获取打卡json字段的打卡信息，微信推送的json字段
+    if j['propertyname'] == 'temperature':  # 找到propertyname为temperature的字段
+    	j['value'] = '36.2'   # 由于原先为null，这里直接设置36.2（根据自己学校打卡选项来）
+    if j['propertyname'] == '举一反三即可':
+        j['value'] = '举一反三即可'
+
+if not post_dict:
+    errmsg = '获取完美校园打卡post参数失败'
+    logging.warning(errmsg)
+    return False
+```
+
+
+
+**3、我们学校要求打卡的时间不一样，这个自动运行的时间该怎么修改？**
+
+进入.github/workflows/run.yml修改时间
+
+```python
+"""
+这里的cron就是脚本运行时间，22,4,9对应的时间是UTC时，对应北京时间早上六点，中午十二点，下午五点
+详细对应关系请查看：http://timebie.com/cn/universalbeijing.php
+
+只有健康打卡的小伙伴可以只留着22就可以了，这样其余两个时间就不会打卡
+"""
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+  schedule:
+    - cron: 0 22,4,9 * * *
+```
+
+
+
+
+
 #### 一、功能介绍
 
 1. 完美校园模拟登录获取 token
 2. 自动获取上次提交的打卡数据
 3. 自动化任务分三次运行（ps：没有校内打卡就不会校内打卡，没有晚上打卡也不会晚上打卡的）
    - `上午六点`：健康打卡，上午校内打卡；
-   - `中午十二点`：下午校内打卡；
-   - `下午五点`：晚上校内打卡`
+   - `中午十二点`：健康打卡，下午校内打卡；
+   - `下午五点`：健康打卡，晚上校内打卡`
 4. 微信推送打卡消息
 
 
