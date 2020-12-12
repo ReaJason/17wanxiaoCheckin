@@ -10,6 +10,8 @@
 
 **⚡2020.11.16：本项目已更新，使用本项目，你不需要抓包就可以使用（理论上大概......）**
 
+
+
 [中南林业科技大学](https://www.csuft.edu.cn/) 测试可用，欢迎大家 fork 测试使用，如果可用的话，可以开 [issue](https://github.com/ReaJason/17wanxiaoCheckin-Actions/issues) 让更多人知道
 
 感谢 [@zhongbr](https://github.com/zhongbr) 的完美校园逆向登录分析代码的分享：[完美校园模拟登录](https://github.com/zhongbr/wanmei_campus)
@@ -31,25 +33,26 @@
 **2、提交信息中有一部分信息无法自动填写，我不会代码怎么办？**
 
 啊这，这只能修改代码加入我们想要设置的值，请进入17wanxiao.py找到地方按如下修改代码，
-`由于python的缩进很严格，所以建议复制粘贴修改`
+`由于python的缩进很严格，所以一定要注意格式`，去掉前面的#即可
 
 ```python
 # 获取健康打卡的参数
 json1 = {"businessType": "epmpics",
         "jsonData": {"templateid": "pneumonia", "token": token},
         "method": "userComeApp"}
-post_dict = get_post_json(token, json1)
+post_dict = get_post_json(json1)
+if post_dict:
+    # 健康打卡
+    # print(post_dict)
 
-for j in post_dict['updatainfo']:  # 这里获取打卡json字段的打卡信息，微信推送的json字段
-    if j['propertyname'] == 'temperature':  # 找到propertyname为temperature的字段
-    	j['value'] = '36.2'   # 由于原先为null，这里直接设置36.2（根据自己学校打卡选项来）
-    if j['propertyname'] == '举一反三即可':
-        j['value'] = '举一反三即可'
-
-if not post_dict:
-    errmsg = '获取完美校园打卡post参数失败'
-    logging.warning(errmsg)
-    return False
+    # 修改温度等参数
+    # for j in post_dict['updatainfo']:  # 这里获取打卡json字段的打卡信息，微信推送的json字段
+    #     if j['propertyname'] == 'temperature':  # 找到propertyname为temperature的字段
+    #         j['value'] = '36.2'  # 由于原先为null，这里直接设置36.2（根据自己学校打卡选项来）
+    #     if j['propertyname'] == '举一反三即可':
+    #         j['value'] = '举一反三即可'
+    
+    # 修改地址......
 ```
 
 

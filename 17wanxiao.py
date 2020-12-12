@@ -19,19 +19,22 @@ def get_token(username, password):
     return user_dict["sessionId"]
 
 
-def get_post_json(token, jsons):
+def get_post_json(jsons):
     retry = 0
     while retry < 3:
         try:
-            # 如果不请求一下这个地址，token就会失效
-            requests.post("https://reportedh5.17wanxiao.com/api/clock/school/getUserInfo", data={'token': token})
             res = requests.post(url="https://reportedh5.17wanxiao.com/sass/api/epmpics", json=jsons, timeout=10).json()
+            # print(res)
         except BaseException:
             retry += 1
             logging.warning('获取完美校园打卡post参数失败，正在重试...')
             time.sleep(1)
             continue
+
+        # {'msg': '业务异常', 'code': '10007', 'data': '无法找到该机构的投票模板数据!'}
+        # ...
         if res['code'] != '10000':
+            # logging.warning(res)
             return None
         data = json.loads(res['data'])
         # print(data)
@@ -57,6 +60,86 @@ def get_post_json(token, jsons):
     return None
 
 
+def receive_check_in(token, custom_id, post_dict):
+    check_json = {
+        "userId": post_dict['userId'],
+        "name": post_dict['name'],
+        "stuNo": post_dict['stuNo'],
+        "whereabouts": post_dict['whereabouts'],
+        "familyWhereabouts": "",
+        "beenToWuhan": post_dict['beenToWuhan'],
+        "contactWithPatients": post_dict['contactWithPatients'],
+        "symptom": post_dict['symptom'],
+        "fever": post_dict['fever'],
+        "cough": post_dict['cough'],
+        "soreThroat": post_dict['soreThroat'],
+        "debilitation": post_dict['debilitation'],
+        "diarrhea": post_dict['diarrhea'],
+        "cold": post_dict['cold'],
+        "staySchool": post_dict['staySchool'],
+        "contacts": post_dict['contacts'],
+        "emergencyPhone": post_dict['emergencyPhone'],
+        "address": post_dict['address'],
+        "familyForAddress": "",
+        "collegeId": post_dict['collegeId'],
+        "majorId": post_dict['majorId'],
+        "classId": post_dict['classId'],
+        "classDescribe": post_dict['classDescribe'],
+        "temperature": post_dict['temperature'],
+        "confirmed": post_dict['confirmed'],
+        "isolated": post_dict['isolated'],
+        "passingWuhan": post_dict['passingWuhan'],
+        "passingHubei": post_dict['passingHubei'],
+        "patientSide": post_dict['patientSide'],
+        "patientContact": post_dict['patientContact'],
+        "mentalHealth": post_dict['mentalHealth'],
+        "wayToSchool": post_dict['wayToSchool'],
+        "backToSchool": post_dict['backToSchool'],
+        "haveBroadband": post_dict['haveBroadband'],
+        "emergencyContactName": post_dict['emergencyContactName'],
+        "helpInfo": "",
+        "passingCity": "",
+        "longitude": "",
+        "latitude": "",
+        "token": token,
+    }
+    headers = {
+        'referer': f'https://reportedh5.17wanxiao.com/nCovReport/index.html?token={token}&customerId={custom_id}',
+        'content-type': 'application/x-www-form-urlencoded;charset=UTF-8'
+    }
+    try:
+        res = requests.post("https://reportedh5.17wanxiao.com/api/reported/receive", headers=headers, data=check_json).json()
+        # 以json格式打印json字符串
+        # print(res)
+        if res['code'] == 0:
+            logging.info(res)
+            return dict(status=1, res=res, post_dict=post_dict, check_json=check_json, type='healthy')
+        else:
+            logging.warning(res)
+            return dict(status=1, res=res, post_dict=post_dict, check_json=check_json, type='healthy')
+    except BaseException:
+        errmsg = f"```打卡请求出错```"
+        logging.warning('打卡请求出错，网络不稳定')
+        return dict(status=0, errmsg=errmsg)
+
+
+def get_recall_data(token):
+    retry = 0
+    while retry < 3:
+        try:
+            res = requests.post(url="https://reportedh5.17wanxiao.com/api/reported/recall", data={"token": token}, timeout=10).json()
+        except BaseException:
+            retry += 1
+            logging.warning('获取完美校园打卡post参数失败，正在重试...')
+            time.sleep(1)
+            continue
+        if res['code'] == 0:
+            logging.info('获取完美校园打卡post参数成功')
+            return res['data']
+        return None
+    return None
+
+
 def healthy_check_in(username, token, post_dict):
     check_json = {"businessType": "epmpics", "method": "submitUpInfo",
                   "jsonData": {"deptStr": post_dict['deptStr'], "areaStr": post_dict['areaStr'],
@@ -69,18 +152,17 @@ def healthy_check_in(username, token, post_dict):
                   }
     try:
         res = requests.post("https://reportedh5.17wanxiao.com/sass/api/epmpics", json=check_json).json()
+        # 以json格式打印json字符串
+        if res['code'] != '10000':
+            logging.warning(res)
+            return dict(status=1, res=res, post_dict=post_dict, check_json=check_json, type='healthy')
+        else:
+            logging.info(res)
+            return dict(status=1, res=res, post_dict=post_dict, check_json=check_json, type='healthy')
     except BaseException:
         errmsg = f"```打卡请求出错```"
-        logging.warning(errmsg)
+        logging.warning('校内打卡请求出错')
         return dict(status=0, errmsg=errmsg)
-
-    # 以json格式打印json字符串
-    if res['code'] != '10000':
-        logging.warning(res)
-        return dict(status=1, res=res, post_dict=post_dict, check_json=check_json, type='healthy')
-    else:
-        logging.info(res)
-        return dict(status=1, res=res, post_dict=post_dict, check_json=check_json, type='healthy')
 
 
 def campus_check_in(username, token, post_dict, id):
@@ -98,18 +180,18 @@ def campus_check_in(username, token, post_dict, id):
     # print(check_json)
     try:
         res = requests.post("https://reportedh5.17wanxiao.com/sass/api/epmpics", json=check_json).json()
+
+        # 以json格式打印json字符串
+        if res['code'] != '10000':
+            logging.warning(res)
+            return dict(status=1, res=res, post_dict=post_dict, check_json=check_json, type=post_dict['templateid'])
+        else:
+            logging.info(res)
+            return dict(status=1, res=res, post_dict=post_dict, check_json=check_json, type=post_dict['templateid'])
     except BaseException:
         errmsg = f"```校内打卡请求出错```"
-        logging.warning(errmsg)
+        logging.warning('校内打卡请求出错')
         return dict(status=0, errmsg=errmsg)
-
-    # 以json格式打印json字符串
-    if res['code'] != '10000':
-        logging.warning(res)
-        return dict(status=1, res=res, post_dict=post_dict, check_json=check_json, type=post_dict['templateid'])
-    else:
-        logging.info(res)
-        return dict(status=1, res=res, post_dict=post_dict, check_json=check_json, type=post_dict['templateid'])
 
 
 def check_in(username, password):
@@ -120,6 +202,9 @@ def check_in(username, password):
     # 获取现在是上午，还是下午，还是晚上
     ape_list = get_ap()
 
+    # 获取学校使用打卡模板Id
+    custom_id = get_custom_id(token)
+
     if not token:
         errmsg = f"{username[:4]}，获取token失败，打卡失败"
         logging.warning(errmsg)
@@ -129,18 +214,32 @@ def check_in(username, password):
     json1 = {"businessType": "epmpics",
              "jsonData": {"templateid": "pneumonia", "token": token},
              "method": "userComeApp"}
-    post_dict = get_post_json(token, json1)
-    if not post_dict:
-        errmsg = '获取完美校园打卡post参数失败'
-        logging.warning(errmsg)
-        return False
+    post_dict = get_post_json(json1)
+    if post_dict:
+        # 健康打卡
+        # print(post_dict)
 
-    # 健康打卡
-    healthy_check_dict = healthy_check_in(username, token, post_dict)
-    check_dict_list.append(healthy_check_dict)
+        # 修改温度等参数
+        # for j in post_dict['updatainfo']:  # 这里获取打卡json字段的打卡信息，微信推送的json字段
+        #     if j['propertyname'] == 'temperature':  # 找到propertyname为temperature的字段
+        #         j['value'] = '36.2'  # 由于原先为null，这里直接设置36.2（根据自己学校打卡选项来）
+        #     if j['propertyname'] == '举一反三即可':
+        #         j['value'] = '举一反三即可'
+
+        # 修改地址，依照自己完美校园，查一下地址即可
+        # post_dict['areaStr'] = '{"streetNumber":"89号","street":"建设东路","district":"","city":"新乡市","province":"河南省",' \
+        #                        '"town":"","pois":"河南师范大学(东区)","lng":113.91572178314209,' \
+        #                        '"lat":35.327695868943984,"address":"牧野区建设东路89号河南师范大学(东区)","text":"河南省-新乡市",' \
+        #                        '"code":""} '
+        healthy_check_dict = healthy_check_in(username, token, post_dict)
+        check_dict_list.append(healthy_check_dict)
+    else:
+        post_dict = get_recall_data(token)
+        healthy_check_dict = receive_check_in(token, custom_id, post_dict)
+        check_dict_list.append(healthy_check_dict)
 
     # 获取校内打卡ID
-    id_list = get_id_list_v1(token)
+    id_list = get_id_list(token, custom_id)
     # print(id_list)
     if not id_list:
         return check_dict_list
@@ -155,7 +254,7 @@ def check_in(username, password):
                                   "stuNo": post_dict['stuNo'],
                                   "token": token}, "method": "userComeAppSchool",
                      "token": token}
-            campus_dict = get_post_json(token, json2)
+            campus_dict = get_post_json(json2)
             campus_dict['areaStr'] = post_dict['areaStr']
             for j in campus_dict['updatainfo']:
                 if j['propertyname'] == 'temperature':
@@ -187,15 +286,39 @@ def server_push(sckey, desp):
         logging.warning("Server酱不起作用了，可能是你的sckey出现了问题")
 
 
-def get_id_list(token):
+def get_custom_id(token):
+    data = {
+        "appClassify": "DK",
+        "token": token
+    }
+    try:
+        res = requests.post("https://reportedh5.17wanxiao.com/api/clock/school/getUserInfo", data=data)
+        # print(res.text)
+        custom = res.json()['userInfo']['customerAppTypeId']
+        if custom:
+            return custom
+        return res.json()['userInfo'].get('customerId')
+    except:
+        return False
+
+
+def auth_user(token, custom_id):
+    try:
+        requests.post("https://reportedh5.17wanxiao.com/api/authen/user", data={"customerId": custom_id,"token": token})
+    except:
+        pass
+
+
+def get_id_list(token, custom_id):
     post_data = {
-        "customerAppTypeId": 175,
+        "customerAppTypeId": custom_id,
         "longitude": "",
         "latitude": "",
         "token": token
     }
     try:
         res = requests.post("https://reportedh5.17wanxiao.com/api/clock/school/rules", data=post_data)
+        # print(res.text)
         return res.json()['customerAppTypeDto']['ruleList']
     except:
         return None
@@ -247,9 +370,15 @@ def run():
             return
         else:
             for check in check_dict:
-                post_msg = "\n".join(
-                    [f"| {i['description']} | {i['value']} |" for i in check['post_dict']['checkbox']])
-                log_info.append(f"""#### {check['post_dict']['username']}{check['type']}打卡信息：
+                if check['post_dict'].get('checkbox'):
+                    post_msg = "\n".join(
+                        [f"| {i['description']} | {i['value']} |" for i in check['post_dict'].get('checkbox')])
+                else:
+                    post_msg = "暂无详情"
+                name = check['post_dict'].get('username')
+                if not name:
+                    name = check['post_dict']['name']
+                log_info.append(f"""#### {name}{check['type']}打卡信息：
 ```
 {json.dumps(check['check_json'], sort_keys=True, indent=4, ensure_ascii=False)}
 ```
