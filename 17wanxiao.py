@@ -13,6 +13,12 @@ def initLogging():
 
 
 def get_token(username, password):
+    """
+    获取用户令牌，模拟登录获取：https://github.com/zhongbr/wanmei_campus
+    :param username: 账号
+    :param password: 密码
+    :return:
+    """
     user_dict = CampusCard(username, password).user_info
     if not user_dict['login']:
         return None
@@ -20,19 +26,22 @@ def get_token(username, password):
 
 
 def get_post_json(jsons):
+    """
+    获取打卡数据
+    :param jsons: 用来获取打卡数据的json字段
+    :return:
+    """
     retry = 0
     while retry < 3:
         try:
             res = requests.post(url="https://reportedh5.17wanxiao.com/sass/api/epmpics", json=jsons, timeout=10).json()
             # print(res)
-        except BaseException:
+        except:
             retry += 1
             logging.warning('获取完美校园打卡post参数失败，正在重试...')
             time.sleep(1)
             continue
 
-        # {'msg': '业务异常', 'code': '10007', 'data': '无法找到该机构的投票模板数据!'}
-        # ...
         if res['code'] != '10000':
             # logging.warning(res)
             return None
@@ -54,13 +63,19 @@ def get_post_json(jsons):
                          data['cusTemplateRelations']],
         }
         # print(json.dumps(post_dict, sort_keys=True, indent=4, ensure_ascii=False))
-        # 在此处修改字段
         logging.info('获取完美校园打卡post参数成功')
         return post_dict
     return None
 
 
 def receive_check_in(token, custom_id, post_dict):
+    """
+    第二类健康打卡
+    :param token: 用户令牌
+    :param custom_id: 健康打卡id
+    :param post_dict: 健康打卡数据
+    :return:
+    """
     check_json = {
         "userId": post_dict['userId'],
         "name": post_dict['name'],
@@ -99,8 +114,8 @@ def receive_check_in(token, custom_id, post_dict):
         "emergencyContactName": post_dict['emergencyContactName'],
         "helpInfo": "",
         "passingCity": "",
-        "longitude": "",
-        "latitude": "",
+        "longitude": "",  # 请在此处填写需要打卡位置的longitude
+        "latitude": "",  # 请在此处填写需要打卡位置的latitude
         "token": token,
     }
     headers = {
@@ -117,18 +132,23 @@ def receive_check_in(token, custom_id, post_dict):
         else:
             logging.warning(res)
             return dict(status=1, res=res, post_dict=post_dict, check_json=check_json, type='healthy')
-    except BaseException:
+    except:
         errmsg = f"```打卡请求出错```"
         logging.warning('打卡请求出错，网络不稳定')
         return dict(status=0, errmsg=errmsg)
 
 
 def get_recall_data(token):
+    """
+    获取第二类健康打卡的打卡数据
+    :param token: 用户令牌
+    :return: 返回dict数据
+    """
     retry = 0
     while retry < 3:
         try:
             res = requests.post(url="https://reportedh5.17wanxiao.com/api/reported/recall", data={"token": token}, timeout=10).json()
-        except BaseException:
+        except:
             retry += 1
             logging.warning('获取完美校园打卡post参数失败，正在重试...')
             time.sleep(1)
@@ -140,13 +160,19 @@ def get_recall_data(token):
     return None
 
 
-def healthy_check_in(username, token, post_dict):
+def healthy_check_in(token, post_dict):
+    """
+    第一类健康打卡
+    :param token: 用户令牌
+    :param post_dict: 打卡数据
+    :return:
+    """
     check_json = {"businessType": "epmpics", "method": "submitUpInfo",
                   "jsonData": {"deptStr": post_dict['deptStr'], "areaStr": post_dict['areaStr'],
                                "reportdate": round(time.time() * 1000), "customerid": post_dict['customerid'],
                                "deptid": post_dict['deptid'], "source": "app",
                                "templateid": post_dict['templateid'], "stuNo": post_dict['stuNo'],
-                               "username": post_dict['username'], "phonenum": username,
+                               "username": post_dict['username'], "phonenum": post_dict['phonenum'],
                                "userid": post_dict['userid'], "updatainfo": post_dict['updatainfo'],
                                "gpsType": 1, "token": token},
                   }
@@ -159,13 +185,21 @@ def healthy_check_in(username, token, post_dict):
         else:
             logging.info(res)
             return dict(status=1, res=res, post_dict=post_dict, check_json=check_json, type='healthy')
-    except BaseException:
+    except:
         errmsg = f"```打卡请求出错```"
         logging.warning('校内打卡请求出错')
         return dict(status=0, errmsg=errmsg)
 
 
 def campus_check_in(username, token, post_dict, id):
+    """
+    校内打卡
+    :param username: 电话号
+    :param token: 用户令牌
+    :param post_dict: 校内打卡数据
+    :param id: 校内打卡id
+    :return:
+    """
     check_json = {"businessType": "epmpics", "method": "submitUpInfoSchool",
                   "jsonData": {"deptStr": post_dict['deptStr'],
                                "areaStr": post_dict['areaStr'],
@@ -203,20 +237,21 @@ def check_in(username, password):
     ape_list = get_ap()
 
     # 获取学校使用打卡模板Id
-    custom_id = get_custom_id(token)
+    custom_id_dict = get_custom_id(token)
 
     if not token:
         errmsg = f"{username[:4]}，获取token失败，打卡失败"
         logging.warning(errmsg)
         return False
 
-    # 获取健康打卡的参数
+    # 获取第一类健康打卡的参数
     json1 = {"businessType": "epmpics",
              "jsonData": {"templateid": "pneumonia", "token": token},
              "method": "userComeApp"}
     post_dict = get_post_json(json1)
+
     if post_dict:
-        # 健康打卡
+        # 第一类健康打卡
         # print(post_dict)
 
         # 修改温度等参数
@@ -231,15 +266,17 @@ def check_in(username, password):
         #                        '"town":"","pois":"河南师范大学(东区)","lng":113.91572178314209,' \
         #                        '"lat":35.327695868943984,"address":"牧野区建设东路89号河南师范大学(东区)","text":"河南省-新乡市",' \
         #                        '"code":""} '
-        healthy_check_dict = healthy_check_in(username, token, post_dict)
+        healthy_check_dict = healthy_check_in(token, post_dict)
         check_dict_list.append(healthy_check_dict)
     else:
+        # 获取第二类健康打卡参数
         post_dict = get_recall_data(token)
-        healthy_check_dict = receive_check_in(token, custom_id, post_dict)
+        # 第二类健康打卡
+        healthy_check_dict = receive_check_in(token, custom_id_dict['customerId'], post_dict)
         check_dict_list.append(healthy_check_dict)
 
     # 获取校内打卡ID
-    id_list = get_id_list(token, custom_id)
+    id_list = get_id_list(token, custom_id_dict['customerAppTypeId'])
     # print(id_list)
     if not id_list:
         return check_dict_list
@@ -268,6 +305,12 @@ def check_in(username, password):
 
 
 def server_push(sckey, desp):
+    """
+    Server酱推送：https://sc.ftqq.com/3.version
+    :param sckey: 通过官网注册获取，获取教程：https://github.com/ReaJason/17wanxiaoCheckin-Actions/blob/master/README_LAST.md#%E4%BA%8Cserver%E9%85%B1%E6%9C%8D%E5%8A%A1%E7%9A%84%E7%94%B3%E8%AF%B7
+    :param desp: 需要推送的内容
+    :return:
+    """
     send_url = f"https://sc.ftqq.com/{sckey}.send"
     params = {
         "text": "健康打卡推送通知",
@@ -287,6 +330,14 @@ def server_push(sckey, desp):
 
 
 def get_custom_id(token):
+    """
+    用来获取custom_id，即类似与打卡模板id
+    :param token: 用户令牌
+    :return: return {
+            'customerId': res.json()['userInfo'].get('customerId'),  # 健康打卡模板id
+            'customerAppTypeId': res.json()['userInfo'].get('customerAppTypeId') # 校内打卡模板id
+        }
+    """
     data = {
         "appClassify": "DK",
         "token": token
@@ -294,22 +345,21 @@ def get_custom_id(token):
     try:
         res = requests.post("https://reportedh5.17wanxiao.com/api/clock/school/getUserInfo", data=data)
         # print(res.text)
-        custom = res.json()['userInfo']['customerAppTypeId']
-        if custom:
-            return custom
-        return res.json()['userInfo'].get('customerId')
+        return {
+            'customerId': res.json()['userInfo'].get('customerId'),
+            'customerAppTypeId': res.json()['userInfo'].get('customerAppTypeId')
+        }
     except:
-        return False
-
-
-def auth_user(token, custom_id):
-    try:
-        requests.post("https://reportedh5.17wanxiao.com/api/authen/user", data={"customerId": custom_id,"token": token})
-    except:
-        pass
+        return None
 
 
 def get_id_list(token, custom_id):
+    """
+    通过校内模板id获取校内打卡具体的每个时间段id
+    :param token: 用户令牌
+    :param custom_id: 校内打卡模板id
+    :return: 返回校内打卡id列表
+    """
     post_data = {
         "customerAppTypeId": custom_id,
         "longitude": "",
@@ -325,6 +375,11 @@ def get_id_list(token, custom_id):
 
 
 def get_id_list_v1(token):
+    """
+    通过校内模板id获取校内打卡具体的每个时间段id（初版,暂留）
+    :param token: 用户令牌
+    :return: 返回校内打卡id列表
+    """
     post_data = {
         "appClassify": "DK",
         "token": token
@@ -335,12 +390,16 @@ def get_id_list_v1(token):
             id_list = sorted(res.json()['appList'][-1]['customerAppTypeRuleList'], key=lambda x: x['id'])
             res_dict = [{'id': j['id'], "templateid": f"clockSign{i + 1}"} for i, j in enumerate(id_list)]
             return res_dict
-        return False
-    except BaseException:
-        return False
+        return None
+    except:
+        return None
 
 
 def get_ap():
+    """
+    获取当前时间，用于校内打卡
+    :return: 返回布尔列表：[am, pm, ev]
+    """
     now_time = datetime.datetime.now() + datetime.timedelta(hours=8)
     am = 0 <= now_time.hour < 12
     pm = 12 <= now_time.hour < 17
@@ -352,8 +411,6 @@ def run():
     initLogging()
     now_time = datetime.datetime.now()
     bj_time = now_time + datetime.timedelta(hours=8)
-    test_day = datetime.datetime.strptime('2020-12-26 00:00:00', '%Y-%m-%d %H:%M:%S')
-    date = (test_day - bj_time).days
     log_info = [f"""
 ------
 #### 现在时间：
@@ -391,11 +448,7 @@ def run():
 ```
 {check['res']}
 ```""")
-    log_info.append(f"""### ⚡考研倒计时:
-```
-{date}天
-```
-
+    log_info.append(f"""
 >
 > [GitHub项目地址](https://github.com/ReaJason/17wanxiaoCheckin-Actions)
 >

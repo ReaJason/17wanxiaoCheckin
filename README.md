@@ -1,6 +1,6 @@
 # 🌈17wanxiaoCheckin-Actions
 
-
+**🚀2021.01.08：增加一些代码注释方便大家看懂代码，编写Wiki方便提供帮助**
 
 **🤺2020.12.04：缝缝补补又几天，欢迎fork使用，感谢反馈，好用别忘记点个star✨**
 
@@ -28,38 +28,9 @@
 
 ![enable](https://cdn.jsdelivr.net/gh/LingSiKi/images/img/enable.png)
 
+**2、我们学校要求打卡的时间不一样，这个自动运行的时间该怎么修改？**
 
-
-**2、提交信息中有一部分信息无法自动填写，我不会代码怎么办？**
-
-啊这，这只能修改代码加入我们想要设置的值，请进入17wanxiao.py找到地方按如下修改代码，
-`由于python的缩进很严格，所以一定要注意格式`，去掉前面的#即可
-
-```python
-# 获取健康打卡的参数
-json1 = {"businessType": "epmpics",
-        "jsonData": {"templateid": "pneumonia", "token": token},
-        "method": "userComeApp"}
-post_dict = get_post_json(json1)
-if post_dict:
-    # 健康打卡
-    # print(post_dict)
-
-    # 修改温度等参数
-    # for j in post_dict['updatainfo']:  # 这里获取打卡json字段的打卡信息，微信推送的json字段
-    #     if j['propertyname'] == 'temperature':  # 找到propertyname为temperature的字段
-    #         j['value'] = '36.2'  # 由于原先为null，这里直接设置36.2（根据自己学校打卡选项来）
-    #     if j['propertyname'] == '举一反三即可':
-    #         j['value'] = '举一反三即可'
-    
-    # 修改地址......
-```
-
-
-
-**3、我们学校要求打卡的时间不一样，这个自动运行的时间该怎么修改？**
-
-进入.github/workflows/run.yml修改时间
+进入 `.github/workflows/run.yml `修改时间
 
 ```python
 """
@@ -77,9 +48,13 @@ on:
     - cron: 0 22,4,9 * * *
 ```
 
+**3、当发现报错显示密码错误，还有 * 次后冻结，请立马修改 secrets 的密码再尝试运行**
 
+**[4、健康打卡问题汇总请前往 wiki](https://github.com/ReaJason/17wanxiaoCheckin-Actions/wiki#%E5%81%A5%E5%BA%B7%E6%89%93%E5%8D%A1%E5%B8%B8%E8%A7%81%E9%97%AE%E9%A2%98%E6%B1%87%E6%80%BB)**
 
+**[5、校内打卡问题汇总请前往 wiki](https://github.com/ReaJason/17wanxiaoCheckin-Actions/wiki#%E6%A0%A1%E5%86%85%E6%89%93%E5%8D%A1%E5%B8%B8%E8%A7%81%E9%97%AE%E9%A2%98%E6%B1%87%E6%80%BB)**
 
+------
 
 #### 一、功能介绍
 
@@ -91,54 +66,7 @@ on:
    - `下午五点`：健康打卡，晚上校内打卡`
 4. 微信推送打卡消息
 
-
-
-#### 二、打卡数据
-
-细心的你应该会发现，自从第一次打卡之后，每次进去信息基本自动填写好了，我抓取的就是这个接口，
-
-这样子也相当于大家不用抓包了，如果你进入完美校园健康打卡界面，它没有自动填写信息，可能
-
-本项目也就不起作用了，可以试试打一次卡然后再进入看有无自动填充信息。
-
-```python
-def get_post_json(self, token):
-    jsons = {"businessType": "epmpics",
-    "jsonData": {"templateid": "pneumonia", "token": token},
-    "method": "userComeApp"}
-    try:
-        # 如果不请求一下这个地址，token就会失效
-        requests.post("https://reportedh5.17wanxiao.com/api/clock/school/getUserInfo", data={'token': token})
-        res = requests.post(url="https://reportedh5.17wanxiao.com/sass/api/epmpics", json=jsons).json()
-    except:
-        return None
-    if res['code'] != '10000':
-        return None
-        data = json.loads(res['data'])
-        post_dict = {
-        "areaStr": data['areaStr'],
-        "deptStr": data['deptStr'],
-        "deptid": data['deptStr']['deptid'],
-        "customerid": data['customerid'],
-        "userid": data['userid'],
-        "username": data['username'],
-        "stuNo": data['stuNo'],
-        "phonenum": data['phonenum'],
-        "templateid": data['templateid'],
-        "updatainfo": [{"propertyname": i["propertyname"], "value": i["value"]} for i in
-        data['cusTemplateRelations']],
-        "checkbox": [{"description": i["decription"], "value": i["value"]} for i in
-        data['cusTemplateRelations']],
-        }
-        # print(json.dumps(post_dict, sort_keys=True, indent=4, ensure_ascii=False))
-        # 在这里修改没有填写的数据，遍历post_dict['updatainfo']修改就行
-        logging.info('获取完美校园打卡post参数成功')
-        return post_dict
-```
-
-
-
-#### 三、使用方法
+#### 二、使用方法
 
 1. 请先确保进入健康打卡界面，信息能够正确的自动填写（没有自动填写的项，可以自行修改代码）
 
