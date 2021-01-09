@@ -257,14 +257,14 @@ def check_in(username, password):
         #修改温度等参数
         for j in post_dict['updatainfo']:  # 这里获取打卡json字段的打卡信息，微信推送的json字段
             if j['propertyname'] == 'temperature':  # 找到propertyname为temperature的字段
-                j['value'] = '36.2'  # 由于原先为null，这里直接设置36.2（根据自己学校打卡选项来）
+                j['value'] = '36.5'  # 由于原先为null，这里直接设置36.2（根据自己学校打卡选项来）
             if j['propertyname'] == 'symptom':
                 j['value'] = '无症状'
 
         #修改地址，依照自己完美校园，查一下地址即可
         post_dict['areaStr'] = '{"streetNumber":"444号","street":"民心街","district":"城厢区","city":"莆田市","province":"福建省",' \
                                '"town":"","pois":"莆田市第二实验小学","lng":119.013509,' \
-                               '"lat":25.452293,"address":""城厢区民心街444号莆田市第二实验小学","text":"福建省-莆田市",' \
+                               '"lat":25.452293,"address":"城厢区民心街444号莆田市第二实验小学","text":"福建省-莆田市",' \
                                '"code":""} '
         healthy_check_dict = healthy_check_in(token, post_dict)
         check_dict_list.append(healthy_check_dict)
