@@ -18,6 +18,8 @@
 
 之前的抓包教程请前往：[完美校园抓包打卡](https://github.com/ReaJason/17wanxiaoCheckin-Actions/blob/master/README_LAST.md)，本项目使用方法，请参考此页面下面
 
+图片无法加载，可以前往我的博客查看 [使用方法](https://reajason.top/2020/06/28/17wanxiaoCheckin/#%E4%B8%89%E3%80%81%E4%BD%BF%E7%94%A8%E6%96%B9%E6%B3%95)（加载也可能很慢）
+
 ------
 
 ## 🌟功能介绍
@@ -34,7 +36,7 @@
 
 1. 请先确保手机app或支付宝小程序进入健康打卡界面，信息能够正确的自动填写（没有自动填写的项，可以自行修改代码）
 
-2. 点击右上角的 `fork`，`fork` 本项目到自己仓库中**（图片无法加载请看下方 Q&A 第一个）**
+2. 点击右上角的 `fork`，`fork` 本项目到自己仓库中
 
    
 
@@ -103,10 +105,6 @@
 ### 1、怎么图片都无法加载出来，看了个寂寞？
 
 可以前往我的博客查看 [使用方法](https://reajason.top/2020/06/28/17wanxiaoCheckin/#%E4%B8%89%E3%80%81%E4%BD%BF%E7%94%A8%E6%96%B9%E6%B3%95)
-
-查看此页面请尝试下载到本地 [README.html](https://cdn.jsdelivr.net/gh/ReaJason/17wanxiaoCheckin-Actions/README.html)，并使用浏览器打开
-
-查看抓包教程页面请尝试下载到本地 [README_LAST.html](https://cdn.jsdelivr.net/gh/ReaJason/17wanxiaoCheckin-Actions/README_LAST.html)，并使用浏览器打开
 
 ### 2、fork之后，修改README.md并没有触发actions？
 
