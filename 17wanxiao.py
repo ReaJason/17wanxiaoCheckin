@@ -3,6 +3,7 @@ import datetime
 import json
 import logging
 import requests
+import os
 
 from login import CampusCard
 
@@ -34,7 +35,8 @@ def get_post_json(jsons):
     retry = 0
     while retry < 3:
         try:
-            res = requests.post(url="https://reportedh5.17wanxiao.com/sass/api/epmpics", json=jsons, timeout=10).json()
+            res = requests.post(
+                url="https://reportedh5.17wanxiao.com/sass/api/epmpics", json=jsons, timeout=10).json()
             # print(res)
         except:
             retry += 1
@@ -123,7 +125,8 @@ def receive_check_in(token, custom_id, post_dict):
         'content-type': 'application/x-www-form-urlencoded;charset=UTF-8'
     }
     try:
-        res = requests.post("https://reportedh5.17wanxiao.com/api/reported/receive", headers=headers, data=check_json).json()
+        res = requests.post("https://reportedh5.17wanxiao.com/api/reported/receive",
+                            headers=headers, data=check_json).json()
         # 以json格式打印json字符串
         # print(res)
         if res['code'] == 0:
@@ -147,7 +150,8 @@ def get_recall_data(token):
     retry = 0
     while retry < 3:
         try:
-            res = requests.post(url="https://reportedh5.17wanxiao.com/api/reported/recall", data={"token": token}, timeout=10).json()
+            res = requests.post(url="https://reportedh5.17wanxiao.com/api/reported/recall",
+                                data={"token": token}, timeout=10).json()
         except:
             retry += 1
             logging.warning('获取完美校园打卡post参数失败，正在重试...')
@@ -177,7 +181,8 @@ def healthy_check_in(token, post_dict):
                                "gpsType": 1, "token": token},
                   }
     try:
-        res = requests.post("https://reportedh5.17wanxiao.com/sass/api/epmpics", json=check_json).json()
+        res = requests.post(
+            "https://reportedh5.17wanxiao.com/sass/api/epmpics", json=check_json).json()
         # 以json格式打印json字符串
         if res['code'] != '10000':
             logging.warning(res)
@@ -213,7 +218,8 @@ def campus_check_in(username, token, post_dict, id):
                   }
     # print(check_json)
     try:
-        res = requests.post("https://reportedh5.17wanxiao.com/sass/api/epmpics", json=check_json).json()
+        res = requests.post(
+            "https://reportedh5.17wanxiao.com/sass/api/epmpics", json=check_json).json()
 
         # 以json格式打印json字符串
         if res['code'] != '10000':
@@ -272,7 +278,8 @@ def check_in(username, password):
         # 获取第二类健康打卡参数
         post_dict = get_recall_data(token)
         # 第二类健康打卡
-        healthy_check_dict = receive_check_in(token, custom_id_dict['customerId'], post_dict)
+        healthy_check_dict = receive_check_in(
+            token, custom_id_dict['customerId'], post_dict)
         check_dict_list.append(healthy_check_dict)
 
     # 获取校内打卡ID
@@ -285,7 +292,8 @@ def check_in(username, password):
     for index, i in enumerate(id_list):
         if ape_list[index]:
             # print(i)
-            logging.info(f"-------------------------------{i['templateid']}-------------------------------")
+            logging.info(
+                f"-------------------------------{i['templateid']}-------------------------------")
             json2 = {"businessType": "epmpics",
                      "jsonData": {"templateid": i['templateid'], "customerAppTypeRuleId": i['id'],
                                   "stuNo": post_dict['stuNo'],
@@ -298,9 +306,11 @@ def check_in(username, password):
                     j['value'] = '36.4'
                 if j['propertyname'] == 'symptom':
                     j['value'] = '无症状'
-            campus_check_dict = campus_check_in(username, token, campus_dict, i['id'])
+            campus_check_dict = campus_check_in(
+                username, token, campus_dict, i['id'])
             check_dict_list.append(campus_check_dict)
-            logging.info("--------------------------------------------------------------")
+            logging.info(
+                "--------------------------------------------------------------")
     return check_dict_list
 
 
@@ -343,7 +353,8 @@ def get_custom_id(token):
         "token": token
     }
     try:
-        res = requests.post("https://reportedh5.17wanxiao.com/api/clock/school/getUserInfo", data=data)
+        res = requests.post(
+            "https://reportedh5.17wanxiao.com/api/clock/school/getUserInfo", data=data)
         # print(res.text)
         return {
             'customerId': res.json()['userInfo'].get('customerId'),
@@ -367,7 +378,8 @@ def get_id_list(token, custom_id):
         "token": token
     }
     try:
-        res = requests.post("https://reportedh5.17wanxiao.com/api/clock/school/rules", data=post_data)
+        res = requests.post(
+            "https://reportedh5.17wanxiao.com/api/clock/school/rules", data=post_data)
         # print(res.text)
         return res.json()['customerAppTypeDto']['ruleList']
     except:
@@ -385,10 +397,13 @@ def get_id_list_v1(token):
         "token": token
     }
     try:
-        res = requests.post("https://reportedh5.17wanxiao.com/api/clock/school/childApps", data=post_data)
+        res = requests.post(
+            "https://reportedh5.17wanxiao.com/api/clock/school/childApps", data=post_data)
         if res.json()['appList']:
-            id_list = sorted(res.json()['appList'][-1]['customerAppTypeRuleList'], key=lambda x: x['id'])
-            res_dict = [{'id': j['id'], "templateid": f"clockSign{i + 1}"} for i, j in enumerate(id_list)]
+            id_list = sorted(
+                res.json()['appList'][-1]['customerAppTypeRuleList'], key=lambda x: x['id'])
+            res_dict = [{'id': j['id'], "templateid": f"clockSign{i + 1}"}
+                        for i, j in enumerate(id_list)]
             return res_dict
         return None
     except:
@@ -400,7 +415,7 @@ def get_ap():
     获取当前时间，用于校内打卡
     :return: 返回布尔列表：[am, pm, ev]
     """
-    now_time = datetime.datetime.now() + datetime.timedelta(hours=8)
+    now_time = datetime.datetime.now()
     am = 0 <= now_time.hour < 12
     pm = 12 <= now_time.hour < 17
     ev = 17 <= now_time.hour <= 23
@@ -410,7 +425,7 @@ def get_ap():
 def run():
     initLogging()
     now_time = datetime.datetime.now()
-    bj_time = now_time + datetime.timedelta(hours=8)
+    bj_time = now_time
     log_info = [f"""
 ------
 #### 现在时间：
@@ -458,4 +473,5 @@ def run():
 
 
 if __name__ == '__main__':
+    os.environ['TZ'] = 'Asia/Shanghai'
     run()
