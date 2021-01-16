@@ -48,17 +48,16 @@ def get_post_json(jsons):
         data = json.loads(res['data'])
         # print(data)
         post_dict = {
-            "areaStr": data['areaStr'],
-            "deptStr": data['deptStr'],
-            "deptid": data['deptStr']['deptid'],
+            "areaStr": 你抓取的 areaStr,
+            "deptStr": 你抓取的deptStr,
+            "deptid": 你抓取的deptid,
             "customerid": data['customerid'],
             "userid": data['userid'],
             "username": data['username'],
-            "stuNo": data['stuNo'],
+            "stuNo": 你抓取的stuNo,
             "phonenum": data['phonenum'],
             "templateid": data['templateid'],
-            "updatainfo": [{"propertyname": i["propertyname"], "value": i["value"]} for i in
-                           data['cusTemplateRelations']],
+            "updatainfo": 你抓取的updatainfo,
             "checkbox": [{"description": i["decription"], "value": i["value"]} for i in
                          data['cusTemplateRelations']],
         }
