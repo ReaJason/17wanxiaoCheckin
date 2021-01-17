@@ -34,9 +34,9 @@
    - `下午五点`：健康打卡，晚上校内打卡
 4. 微信推送打卡消息
 
-## 💢使用方法 —— 请使用 [腾讯云函数](https://github.com/ReaJason/17wanxiaoCheckin-Actions/blob/master/17wanxiaoCheckin-SCF.md)
+## 💢使用方法（已失效） —— 请使用 [腾讯云函数](https://github.com/ReaJason/17wanxiaoCheckin-Actions/blob/master/17wanxiaoCheckin-SCF.md)
 
-1. 请先确保手机app或支付宝小程序进入健康打卡界面，信息能够正确的自动填写（没有自动填写的项，可以自行修改代码）
+1. 请先确保手机app或支付宝小程序进入健康打卡界面，信息能够正确的自动填写，并手动打一次卡（没有自动填写的项，可以自行修改代码）
 
 2. 点击右上角的 `fork`，`fork` 本项目到自己仓库中
 
@@ -91,7 +91,7 @@
 
    
 
-6. 查看 `Actions` 运行情况，以及微信推送情况（如果 Message 有值为 None，请一定要修改代码，因为该值无法自动填写），**至此每日六点多将会自行打卡**
+6. 查看 `Actions` 运行情况，以及微信推送情况（检查json 字段中的 areaStr 是否为自己所在地址，如果不在，请一定要修改代码，因为打卡的地址不对可不行；如果 Message 有值为 None，请一定要修改代码，因为该值无法自动填写），**至此每日六点多将会自行打卡**
 
    
 

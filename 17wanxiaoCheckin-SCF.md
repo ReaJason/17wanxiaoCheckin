@@ -56,8 +56,8 @@
 
 每一次修改代码之后，一定要点一下测试（自动部署），或者部署代码才能生效
 
-查看微信推送情况（如果 Message 有值为 None，请一定要修改代码，因为该值无法自动填写），**至此每日六点多将会自行打卡**
+查看微信推送情况（检查json 字段中的 areaStr 是否为自己所在地址，如果不在，请一定要修改代码，因为打卡的地址不对可不行；如果 Message 有值为 None，请一定要修改代码，因为该值无法自动填写），**至此每日六点多将会自行打卡**
 
 ![测试.png](https://cdn.jsdelivr.net/gh/ReaJason/17wanxiaoCheckin-Actions/Pictures/测试.png)
 
-### 8、如果有什么报错，请前往 [这里](https://github.com/ReaJason/17wanxiaoCheckin-Actions#qa)
+### 8、如果有什么报错或者其他问题，请前往 [这里](https://github.com/ReaJason/17wanxiaoCheckin-Actions#qa)
