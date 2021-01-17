@@ -17,17 +17,17 @@
 
 ### 2、进入云函数
 
-![搜索云函数.png](https://cdn.jsdelivr.net/gh/ReaJason/17wanxiaoCheckin-Actions/Pictures/搜索云函数.png)
+![进入云函数.png](https://cdn.jsdelivr.net/gh/ReaJason/17wanxiaoCheckin-Actions/Pictures/搜索云函数.png)
 
 ### 3、新建云函数
 
-![选择地区.png](https://cdn.jsdelivr.net/gh/ReaJason/17wanxiaoCheckin-Actions/Pictures/选择地区.png)
+![新建云函数.png](https://cdn.jsdelivr.net/gh/ReaJason/17wanxiaoCheckin-Actions/Pictures/选择地区.png)
 
 ### 4、上传代码
 
 在此下载 [代码](https://lingsiki.lanzous.com/iomnSkhi8ve)
 
-![新建函数.png](https://cdn.jsdelivr.net/gh/ReaJason/17wanxiaoCheckin-Actions/Pictures/新建函数.png)
+![上传代码.png](https://cdn.jsdelivr.net/gh/ReaJason/17wanxiaoCheckin-Actions/Pictures/新建函数.png)
 
 ### 5、触发器配置
 
@@ -60,4 +60,4 @@
 
 ![测试.png](https://cdn.jsdelivr.net/gh/ReaJason/17wanxiaoCheckin-Actions/Pictures/测试.png)
 
-### 8、如果有什么报错或者其他问题，请前往 [这里](https://github.com/ReaJason/17wanxiaoCheckin-Actions#qa)
+### 8、如果有什么报错或者其他问题，请前往 [这里](https://github.com/ReaJason/17wanxiaoCheckin-Actions/wiki) 自行解决，或进群反馈没有解决的问题
