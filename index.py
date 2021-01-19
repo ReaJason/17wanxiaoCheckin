@@ -1,4 +1,5 @@
 import time
+import os
 import datetime
 import json
 import logging
@@ -160,9 +161,10 @@ def get_recall_data(token):
     return None
 
 
-def healthy_check_in(token, post_dict):
+def healthy_check_in(token, username, post_dict):
     """
     第一类健康打卡
+    :param username: 手机号
     :param token: 用户令牌
     :param post_dict: 打卡数据
     :return:
@@ -172,7 +174,7 @@ def healthy_check_in(token, post_dict):
                                "reportdate": round(time.time() * 1000), "customerid": post_dict['customerid'],
                                "deptid": post_dict['deptid'], "source": "app",
                                "templateid": post_dict['templateid'], "stuNo": post_dict['stuNo'],
-                               "username": post_dict['username'], "phonenum": post_dict['phonenum'],
+                               "username": post_dict['username'], "phonenum": username,
                                "userid": post_dict['userid'], "updatainfo": post_dict['updatainfo'],
                                "gpsType": 1, "token": token},
                   }
@@ -266,7 +268,7 @@ def check_in(username, password):
         #                        '"town":"","pois":"河南师范大学(东区)","lng":113.91572178314209,' \
         #                        '"lat":35.327695868943984,"address":"牧野区建设东路89号河南师范大学(东区)","text":"河南省-新乡市",' \
         #                        '"code":""} '
-        healthy_check_dict = healthy_check_in(token, post_dict)
+        healthy_check_dict = healthy_check_in(token, username, post_dict)
         check_dict_list.append(healthy_check_dict)
     else:
         # 获取第二类健康打卡参数
@@ -275,32 +277,32 @@ def check_in(username, password):
         healthy_check_dict = receive_check_in(token, custom_id_dict['customerId'], post_dict)
         check_dict_list.append(healthy_check_dict)
 
-    # 获取校内打卡ID
-    id_list = get_id_list(token, custom_id_dict['customerAppTypeId'])
-    # print(id_list)
-    if not id_list:
-        return check_dict_list
-
-    # 校内打卡
-    for index, i in enumerate(id_list):
-        if ape_list[index]:
-            # print(i)
-            logging.info(f"-------------------------------{i['templateid']}-------------------------------")
-            json2 = {"businessType": "epmpics",
-                     "jsonData": {"templateid": i['templateid'], "customerAppTypeRuleId": i['id'],
-                                  "stuNo": post_dict['stuNo'],
-                                  "token": token}, "method": "userComeAppSchool",
-                     "token": token}
-            campus_dict = get_post_json(json2)
-            campus_dict['areaStr'] = post_dict['areaStr']
-            for j in campus_dict['updatainfo']:
-                if j['propertyname'] == 'temperature':
-                    j['value'] = '36.4'
-                if j['propertyname'] == 'symptom':
-                    j['value'] = '无症状'
-            campus_check_dict = campus_check_in(username, token, campus_dict, i['id'])
-            check_dict_list.append(campus_check_dict)
-            logging.info("--------------------------------------------------------------")
+    # # 获取校内打卡ID
+    # id_list = get_id_list(token, custom_id_dict['customerAppTypeId'])
+    # # print(id_list)
+    # if not id_list:
+    #     return check_dict_list
+    #
+    # # 校内打卡
+    # for index, i in enumerate(id_list):
+    #     if ape_list[index]:
+    #         # print(i)
+    #         logging.info(f"-------------------------------{i['templateid']}-------------------------------")
+    #         json2 = {"businessType": "epmpics",
+    #                  "jsonData": {"templateid": i['templateid'], "customerAppTypeRuleId": i['id'],
+    #                               "stuNo": post_dict['stuNo'],
+    #                               "token": token}, "method": "userComeAppSchool",
+    #                  "token": token}
+    #         campus_dict = get_post_json(json2)
+    #         campus_dict['areaStr'] = post_dict['areaStr']
+    #         for j in campus_dict['updatainfo']:
+    #             if j['propertyname'] == 'temperature':
+    #                 j['value'] = '36.4'
+    #             if j['propertyname'] == 'symptom':
+    #                 j['value'] = '无症状'
+    #         campus_check_dict = campus_check_in(username, token, campus_dict, i['id'])
+    #         check_dict_list.append(campus_check_dict)
+    #         logging.info("--------------------------------------------------------------")
     return check_dict_list
 
 
@@ -317,16 +319,17 @@ def server_push(sckey, desp):
         "desp": desp
     }
     # 发送消息
-    res = requests.post(send_url, data=params)
-    # {"errno":0,"errmsg":"success","dataset":"done"}
-    # logging.info(res.text)
-    try:
-        if not res.json()['errno']:
-            logging.info('Server酱推送服务成功')
-        else:
-            logging.warning('Server酱推送服务失败')
-    except:
-        logging.warning("Server酱不起作用了，可能是你的sckey出现了问题")
+    for _ in range(3):
+        res = requests.post(send_url, data=params)
+        try:
+            if not res.json()['errno']:
+                logging.info('Server酱推送服务成功')
+                break
+            else:
+                logging.warning('Server酱推送服务失败')
+                break
+        except:
+            logging.warning("Server酱不起作用了，可能是你的sckey出现了问题也可能服务器波动了，正在重试......")
 
 
 def get_custom_id(token):
@@ -407,7 +410,7 @@ def get_ap():
     return [am, pm, ev]
 
 
-def run():
+def main_handler(*args, **kwargs):
     initLogging()
     bj_time = datetime.datetime.utcnow() + datetime.timedelta(hours=8)
     log_info = [f"""
@@ -416,9 +419,9 @@ def run():
 ```
 {bj_time.strftime("%Y-%m-%d %H:%M:%S %p")}
 ```"""]
-    username_list = input().split(',')
-    password_list = input().split(',')
-    sckey = input()
+    username_list = os.environ['USERNAME'].split(',')
+    password_list = os.environ['PASSWORD'].split(',')
+    sckey = os.environ['SCKEY']
     for username, password in zip([i.strip() for i in username_list if i != ''],
                                   [i.strip() for i in password_list if i != '']):
         check_dict = check_in(username, password)
@@ -457,4 +460,4 @@ def run():
 
 
 if __name__ == '__main__':
-    run()
+    main_handler()

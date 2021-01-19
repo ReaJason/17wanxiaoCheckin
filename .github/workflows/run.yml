@@ -1,12 +1,12 @@
 name: 17wanxiaoCheckin
 
 #on:
-#  push:
-#    branches: [ master ]
-#  pull_request:
-#    branches: [ master ]
-#  schedule:
-#    - cron: 0 22,4,9 * * *
+# push:
+#   branches: [ master ]
+# pull_request:
+#   branches: [ master ]
+# schedule:
+#   - cron: 0 22,4,9 * * *
 
 jobs:
   build:
@@ -14,16 +14,13 @@ jobs:
 
     steps:
     - uses: actions/checkout@v2
-      
+
     - name: Pip
-      run: |
-        pip3 install requests pycryptodome
-         
+      run: pip3 install requests pycryptodome
+
     - name: HealthyCheckIn
-      run: |
-        python3 17wanxiao.py <<EOF
-        ${{secrets.USERNAME}}
-        ${{secrets.PASSWORD}}
-        ${{secrets.SCKEY}}
-        EOF
-        
+      run: python3 index.py
+      env:
+        USERNAME: ${{secrets.USERNAME}}
+        PASSWORD: ${{secrets.PASSWORD}}
+        SCKEY: ${{secrets.SCKEY}}
