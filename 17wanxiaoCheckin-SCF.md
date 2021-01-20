@@ -1,6 +1,6 @@
 # 🌈17wanxiaoCheckin-SCF
 
-## 前言
+## 前言（GitHub Actions已修复，可继续使用）
 
 由于 GitHub Actions 暂无法与完美校园交换密钥，可能完美校园把 GitHub Actions 的 IP 给 ban 了（猜测），暂时给出一个腾讯云函数版的解决方案，其余方案还有：服务器、[coding](https://blog.imyan.ren/posts/eb6032e9/)、手机（Tasker），以及其他可自动化运行python脚本的办法皆可！
 
