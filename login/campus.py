@@ -54,7 +54,7 @@ class CampusCard:
         '''
         try:
             resp = requests.post(
-                'https://app.17wanxiao.com:443/campus/cam_iface46/exchangeSecretkey.action',
+                'https://app.17wanxiao.com/campus/cam_iface46/exchangeSecretkey.action',
                 headers={
                     'User-Agent': 'NCP/5.3.1 (iPhone; iOS 13.5; Scale/2.00)',
                 },
