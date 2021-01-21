@@ -56,7 +56,7 @@ class CampusCard:
             resp = requests.post(
                 'https://app.17wanxiao.com/campus/cam_iface46/exchangeSecretkey.action',
                 headers={
-                    'User-Agent': 'NCP/5.3.1 (iPhone; iOS 13.5; Scale/2.00)',
+                    'User-Agent': 'Dalvik/2.1.0 (Linux; U; Android 5.1.1; HUAWEI MLA-AL10 Build/HUAWEIMLA-AL10)',
                 },
                 json={
                     'key': self.user_info['rsaKey']['public']
@@ -91,10 +91,10 @@ class CampusCard:
             'password': password_list,
             'qudao': 'guanwang',
             'requestMethod': 'cam_iface46/loginnew.action',
-            'shebeixinghao': 'raphael',
+            'shebeixinghao': 'MLA-AL10',
             'systemType': 'android',
-            'telephoneInfo': '13.5',
-            'telephoneModel': 'Redmi K20 Pro Premium Edition',
+            'telephoneInfo': '5.1.1',
+            'telephoneModel': 'HUAWEI MLA-AL10',
             'type': '1',
             'userName': self.phone,
             'wanxiaoVersion': 10531102,
