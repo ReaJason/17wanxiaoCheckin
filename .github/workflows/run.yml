@@ -24,3 +24,6 @@ jobs:
         USERNAME: ${{secrets.USERNAME}}
         PASSWORD: ${{secrets.PASSWORD}}
         SCKEY: ${{secrets.SCKEY}}
+        SEND_EMAIL: ${{secrets.SEND_EMAIL}}
+        SEND_PWD: ${{secrets.SEND_PWD}}
+        RECEIVE_EMAIL: ${{secrets.RECEIVE_EMAIL}}
