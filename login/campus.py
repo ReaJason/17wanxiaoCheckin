@@ -91,10 +91,10 @@ class CampusCard:
             'password': password_list,
             'qudao': 'guanwang',
             'requestMethod': 'cam_iface46/loginnew.action',
-            'shebeixinghao': 'iPhone12',
-            'systemType': 'iOS',
+            'shebeixinghao': 'raphael',
+            'systemType': 'android',
             'telephoneInfo': '13.5',
-            'telephoneModel': 'iPhone',
+            'telephoneModel': 'Redmi K20 Pro Premium Edition',
             'type': '1',
             'userName': self.phone,
             'wanxiaoVersion': 10531102,
@@ -117,7 +117,7 @@ class CampusCard:
                 self.user_info['login'] = True
                 self.user_info['exchangeFlag'] = False
             else:
-                logging.info(f'{self.phone[:4]}：{resp["message_"]}')
+                logging.warning(f'{self.phone[:4]}：{resp["message_"]}')
             return resp['result_']
         except Exception as e:
             logging.warning(e)
