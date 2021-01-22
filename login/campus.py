@@ -130,4 +130,5 @@ class CampusCard:
                 self.user_info['login_msg'] = resp
             return resp['result_']
         except Exception as e:
+            self.user_info['login_msg'] = {"message_": e}
             logging.warning(e)
