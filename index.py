@@ -63,8 +63,9 @@ def get_user_info(token):
             res = requests.post(
                 "https://reportedh5.17wanxiao.com/api/clock/school/getUserInfo", data=data
             )
+            user_info = res.json()["userInfo"]
             logging.info('获取个人信息成功')
-            return res.json()["userInfo"]
+            return user_info
         except:
             logging.warning('获取个人信息失败，正在重试......')
             time.sleep(1)
