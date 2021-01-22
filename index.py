@@ -23,13 +23,17 @@ def get_token(username, password):
     :param password: 密码
     :return:
     """
-    for _ in range(5):
+    for _ in range(10):
         user_dict = CampusCard(username, password).user_info
-        if not user_dict["login"]:
-	        time.sleep(2)
-	        continue
-        else:
+        if user_dict["login"]:
             return user_dict["sessionId"]
+        elif user_dict['login_msg']['message_'] == "该手机号未注册完美校园":
+            return None
+        elif user_dict['login_msg']['message_'].startswith("密码错误"):
+            return None
+        else:
+            logging.warning('正在尝试重新登录......')
+            time.sleep(5)
     return None
 
 
@@ -54,14 +58,17 @@ def get_user_info(token):
     :return: return
     """
     data = {"appClassify": "DK", "token": token}
-    try:
-        res = requests.post(
-            "https://reportedh5.17wanxiao.com/api/clock/school/getUserInfo", data=data
-        )
-        # print(res.text)
-        return res.json()["userInfo"]
-    except:
-        return None
+    for _ in range(3):
+        try:
+            res = requests.post(
+                "https://reportedh5.17wanxiao.com/api/clock/school/getUserInfo", data=data
+            )
+            logging.info('获取个人信息成功')
+            return res.json()["userInfo"]
+        except:
+            logging.warning('获取个人信息失败，正在重试......')
+            time.sleep(1)
+    return None
 
 
 def get_post_json(post_json, user_info):
@@ -520,11 +527,12 @@ def qq_mail_push(send_email, send_pwd, receive_email, check_info_list):
     ]
     for check in check_info_list:
         if check["status"]:
-            name = check["post_dict"]["username"]
-            type = check["type"]
+            name = check['post_dict'].get('username')
+            if not name:
+                name = check['post_dict']['name']
             mail_msg_list.append(f"""<hr>
 <details>
-<summary style="font-family: 'Microsoft YaHei UI',serif; color: deepskyblue;">{name}：{type} 打卡结果：{check['res']}</summary>
+<summary style="font-family: 'Microsoft YaHei UI',serif; color: deepskyblue;">{name}：{check["type"]} 打卡结果：{check['res']}</summary>
 <pre><code>
 {json.dumps(check['check_json'], sort_keys=True, indent=4, ensure_ascii=False)}
 </code></pre>
@@ -654,7 +662,9 @@ def main_handler(*args, **kwargs):
                         )
                     else:
                         post_msg = "暂无详情"
-                    name = check["post_dict"]["username"]
+                    name = check['post_dict'].get('username')
+                    if not name:
+                        name = check['post_dict']['name']
                     log_info.append(
                         f"""#### {name}{check['type']}打卡信息：
 ```
@@ -691,7 +701,8 @@ def main_handler(*args, **kwargs):
 >期待你给项目的star✨
 """
     )
-    server_push(sckey, "\n".join(log_info))
+    if sckey:
+        server_push(sckey, "\n".join(log_info))
     if send_email and send_pwd and receive_email:
         qq_mail_push(send_email, send_pwd, receive_email, raw_info)
 

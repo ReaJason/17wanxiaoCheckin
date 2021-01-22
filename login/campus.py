@@ -40,7 +40,7 @@ class CampusCard:
             'login': False,
             'serverPublicKey': '',
             'deviceId': str(random.randint(999999999999999, 9999999999999999)),
-            'wanxiaoVersion': 10531102,
+            'wanxiaoVersion': 10462101,
             'rsaKey': {
                 'private': rsa_keys[1],
                 'public': rsa_keys[0]
@@ -97,7 +97,7 @@ class CampusCard:
             'telephoneModel': 'HUAWEI MLA-AL10',
             'type': '1',
             'userName': self.phone,
-            'wanxiaoVersion': 10531102,
+            'wanxiaoVersion': 10462101,
             'yunyingshang': '07'
         }
         upload_args = {
@@ -112,12 +112,22 @@ class CampusCard:
                 verify=False,
                 timeout=30,
             ).json()
+            """
+            {'result_': True, 'data': '........', 'message_': '登录成功', 'code_': '0'}
+            {'result_': False, 'message_': '该手机号未注册完美校园', 'code_': '4'}
+            {'result_': False, 'message_': '您正在新设备上使用完美校园，请使用验证码进行验证登录', 'code_': '5'}
+            {'result_': False, 'message_': '密码错误,您还有5次机会!', 'code_': '5'}
+            """
             if resp['result_']:
+                # logging.info(resp)
                 logging.info(f'{self.phone[:4]}：{resp["message_"]}')
                 self.user_info['login'] = True
                 self.user_info['exchangeFlag'] = False
+                self.user_info['login_msg'] = resp
             else:
+                # logging.warning(resp)
                 logging.warning(f'{self.phone[:4]}：{resp["message_"]}')
+                self.user_info['login_msg'] = resp
             return resp['result_']
         except Exception as e:
             logging.warning(e)
