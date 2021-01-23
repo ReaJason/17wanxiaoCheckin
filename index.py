@@ -30,6 +30,7 @@ def get_token(username, password):
         elif user_dict['login_msg']['message_'] == "该手机号未注册完美校园":
             return None
         elif user_dict['login_msg']['message_'].startswith("密码错误"):
+            logging.warning("代码是死的，密码错误了就是错误了，赶紧去查看一下是不是输错了!")
             return None
         else:
             logging.warning('正在尝试重新登录......')
@@ -72,7 +73,7 @@ def get_user_info(token):
     return None
 
 
-def get_post_json(post_json, user_info):
+def get_post_json(post_json):
     """
     获取打卡数据
     :param jsons: 用来获取打卡数据的json字段
@@ -85,27 +86,22 @@ def get_post_json(post_json, user_info):
                 json=post_json,
                 timeout=10,
             ).json()
-        # print(res)
         except:
             logging.warning("获取完美校园打卡post参数失败，正在重试...")
             time.sleep(1)
             continue
         if res["code"] != "10000":
-            # logging.warning(res)
-            return None
+            logging.warning(res)
         data = json.loads(res["data"])
         # print(data)
         post_dict = {
-            "areaStr": data["areaStr"],
-            "deptStr": {
-                "deptid": user_info["classId"],
-                "text": user_info["classDescription"],
-            },
-            "deptid": user_info["classId"],
-            "customerid": user_info["customerId"],
-            "userid": str(user_info["userId"]),
-            "username": user_info["username"],
-            "stuNo": user_info["stuNo"],
+            "areaStr": data['areaStr'],
+            "deptStr": data['deptStr'],
+            "deptid": data['deptStr']['deptid'] if data['deptStr'] else None,
+            "customerid": data['customerid'],
+            "userid": data['userid'],
+            "username": data['username'],
+            "stuNo": data['stuNo'],
             "phonenum": data["phonenum"],
             "templateid": data["templateid"],
             "updatainfo": [
@@ -160,23 +156,37 @@ def healthy_check_in(token, username, post_dict):
             "token": token,
         },
     }
-    try:
-        res = requests.post(
-            "https://reportedh5.17wanxiao.com/sass/api/epmpics", json=check_json
-        ).json()
-        # 以json格式打印json字符串
-        logging.info(res)
-        return {
-            "status": 1,
-            "res": res,
-            "post_dict": post_dict,
-            "check_json": check_json,
-            "type": "healthy",
-        }
-    except:
-        errmsg = f"```打卡请求出错```"
-        logging.warning("校内打卡请求出错")
-        return {"status": 0, "errmsg": errmsg}
+    for _ in range(3):
+        try:
+            res = requests.post(
+                "https://reportedh5.17wanxiao.com/sass/api/epmpics", json=check_json
+            ).json()
+            if res['code'] == '10000':
+                logging.info(res)
+                return {
+                    "status": 1,
+                    "res": res,
+                    "post_dict": post_dict,
+                    "check_json": check_json,
+                    "type": "healthy",
+                }
+            elif "频繁" in res['data']:
+                logging.info(res)
+                return {
+                    "status": 1,
+                    "res": res,
+                    "post_dict": post_dict,
+                    "check_json": check_json,
+                    "type": "healthy",
+                }
+            else:
+                logging.warning(res)
+                return {"status": 0, "errmsg": f"{post_dict['username']}: {res}"}
+        except:
+            errmsg = f"```打卡请求出错```"
+            logging.warning("健康打卡请求出错")
+            return {"status": 0, "errmsg": errmsg}
+    return {"status": 0, "errmsg": "健康打卡请求出错"}
 
 
 def get_recall_data(token):
@@ -199,7 +209,8 @@ def get_recall_data(token):
         if res["code"] == 0:
             logging.info("获取完美校园打卡post参数成功")
             return res["data"]
-        return None
+        else:
+            logging.warning(res)
     return None
 
 
@@ -414,18 +425,23 @@ def campus_check_in(username, token, post_dict, id):
 
 
 def check_in(username, password):
+    check_dict_list = []
     # 登录获取token用于打卡
     token = get_token(username, password)
+
+    if not token:
+        errmsg = f"{username[:4]}，获取token失败，打卡失败"
+        logging.warning(errmsg)
+        check_dict_list.append({"status": 0, "errmsg": errmsg})
+        return check_dict_list
     # print(token)
-    check_dict_list = []
     # 获取现在是上午，还是下午，还是晚上
     # ape_list = get_ap()
 
     # 获取学校使用打卡模板Id
     user_info = get_user_info(token)
-
-    if not token:
-        errmsg = f"{username[:4]}，获取token失败，打卡失败"
+    if not user_info:
+        errmsg = f"{username[:4]}，获取user_info失败，打卡失败"
         logging.warning(errmsg)
         check_dict_list.append({"status": 0, "errmsg": errmsg})
         return check_dict_list
@@ -436,7 +452,7 @@ def check_in(username, password):
         "jsonData": {"templateid": "pneumonia", "token": token},
         "method": "userComeApp",
     }
-    post_dict = get_post_json(json1, user_info)
+    post_dict = get_post_json(json1)
 
     if post_dict:
         # 第一类健康打卡
@@ -446,8 +462,14 @@ def check_in(username, password):
         # for j in post_dict['updatainfo']:  # 这里获取打卡json字段的打卡信息，微信推送的json字段
         #     if j['propertyname'] == 'temperature':  # 找到propertyname为temperature的字段
         #         j['value'] = '36.2'  # 由于原先为null，这里直接设置36.2（根据自己学校打卡选项来）
-        #     if j['propertyname'] == '举一反三即可':
-        #         j['value'] = '举一反三即可'
+        #     if j['propertyname'] == 'xinqing':
+        #         j['value'] = '健康'
+        #     if j['propertyname'] == 'outdoor':
+        #         j['value'] = '否'
+        #     if j['propertyname'] == 'symptom':
+        #         j['value'] = '无症状'
+        #     if j['propertyname'] == 'ownbodyzk':
+        #         j['value'] = '身体健康，无异常'
 
         # 修改地址，依照自己完美校园，查一下地址即可
         # post_dict['areaStr'] = '{"streetNumber":"89号","street":"建设东路","district":"","city":"新乡市","province":"河南省",' \
@@ -479,7 +501,7 @@ def check_in(username, password):
     #                               "stuNo": post_dict['stuNo'],
     #                               "token": token}, "method": "userComeAppSchool",
     #                  "token": token}
-    #         campus_dict = get_post_json(json2, user_info)
+    #         campus_dict = get_post_json(json2)
     #         campus_dict['areaStr'] = post_dict['areaStr']
     #         for j in campus_dict['updatainfo']:
     #             if j['propertyname'] == 'temperature':
