@@ -1,0 +1,32 @@
+name: 17wanxiaoCheckin
+
+on:
+   push:
+    branches: [ master ]
+   pull_request:
+    branches: [ master ]
+   schedule:
+    - cron: 0 22 * * *
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+
+    - name: Pip
+      run: pip3 install requests pycryptodome
+
+    - name: HealthyCheckIn
+      run: python3 index.py
+      env:
+        USERNAME: ${{secrets.USERNAME}}
+        PASSWORD: ${{secrets.PASSWORD}}
+        DEVICEID: ${{secrets.DEVICEID}}
+        SCKEY: ${{secrets.SCKEY}}
+        KEY: ${{secrets.KEY}}
+        QQ_NUM: ${{secrets.QQ_NUM}}
+        SEND_EMAIL: ${{secrets.SEND_EMAIL}}
+        SEND_PWD: ${{secrets.SEND_PWD}}
+        RECEIVE_EMAIL: ${{secrets.RECEIVE_EMAIL}}
