@@ -8,7 +8,7 @@ import requests
 def qmsg_push(key, qq_num, msg, send_type="send"):
     """
     :param key: qmsg酱的key，官网获取
-    :param qq_num: qq号或qq群组号
+    :param qq_num: qq号或qq群组号，要与 send_type 对应
     :param msg: 发送消息
     :param send_type: 发送模式，"send"为发送给个人，"group"为发送给群组
     :return:

@@ -1,0 +1,20 @@
+{
+  "email": {  //  自定义邮箱推送
+    "enable": false,
+    "smtp_address": "smtp.qq.com",  // stmp服务地址
+    "smtp_port": 465,  // stmp服务端口
+    "send_email": "***@qq.com",  // 发送邮箱的邮箱地址
+    "send_pwd": "***",  // 发送邮箱的邮箱授权码
+    "receive_email": "***@qq.com"  // 接收信息的邮箱地址
+  },
+  "wechat": {  //  Server酱·Turbo版：https://sct.ftqq.com/
+    "enable": false,
+    "send_key": "**"  // Server 酱推送密钥
+  },
+  "qmsg": {  //  Qmsg酱：https://qmsg.zendee.cn/index.html
+    "enable": false,
+    "key": "**",
+    "type": "send",  //  send 私聊消息推送，group 群消息推送
+    "qq_num": "**"  // 上面设置send，则填写接受推送的qq号，group则填写群号
+  }
+}
