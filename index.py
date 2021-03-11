@@ -125,7 +125,6 @@ def check_in(user):
         
         healthy_check_dict = healthy1_check_in(token, user['phone'], post_dict)
         check_dict_list.append(healthy_check_dict)
-        
     elif healthy2_check_config['enable']:
         # 第二类健康打卡
         
@@ -133,9 +132,15 @@ def check_in(user):
         post_dict = get_healthy2_check_posh_json(token)
         
         # 合并配置文件的打卡信息
-        post_dict.update(healthy2_check_config['post_json'])
-        
+        if not healthy2_check_config['post_json']['latitude'] and not healthy2_check_config['post_json']['longitude']:
+            post_dict['latitude'] = ""
+            post_dict['longitude'] = ""
+            log.info('当前打卡未设置经纬度，后台会将此次打卡计为手动打卡（学校没做要求可不管）')
+        for i, j in healthy2_check_config['post_json'].items():
+            if j:
+                post_dict[i] = j
         healthy_check_dict = healthy2_check_in(token, user_info["customerId"], post_dict)
+    
         check_dict_list.append(healthy_check_dict)
     else:
         log.info('当前并未配置健康打卡方式，暂不进行打卡操作')
