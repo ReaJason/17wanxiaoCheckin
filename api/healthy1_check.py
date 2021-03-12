@@ -32,14 +32,14 @@ def get_healthy1_check_post_json(token):
                 timeout=10,
             ).json()
         except:
-            log.warning("第一类健康打卡完美校园打卡post参数获取失败，正在重试...")
+            log.warning("完美校园第一类健康打卡post参数获取失败，正在重试...")
             time.sleep(1)
             continue
         if res["code"] != "10000":
             """
             {'msg': '业务异常', 'code': '10007', 'data': '无法找到该机构的投票模板数据!'}
             """
-            log.warning(res['data'])
+            log.warning(f'完美校园第一类健康打卡post参数获取失败{res}')
             return None
         data = json.loads(res["data"])
         post_dict = {
@@ -70,7 +70,7 @@ def get_healthy1_check_post_json(token):
                 for i in data["cusTemplateRelations"]
             ],
         }
-        log.info("第一类健康打卡完美校园打卡post参数获取成功")
+        log.info("完美校园第一类健康打卡post参数获取成功")
         return post_dict
     return None
 
@@ -117,6 +117,8 @@ def healthy1_check_in(token, phone, post_dict):
                     "check_json": check_json,
                     "type": "healthy",
                 }
+            elif res['data'] == "areaStr can not be null":
+                log.warning('当前用户无法获取第一类健康打卡地址信息，请前往配置 user.json 文件，one_check 下的 areaStr 设置地址信息')
             elif "频繁" in res['data']:
                 log.info(res)
                 return {

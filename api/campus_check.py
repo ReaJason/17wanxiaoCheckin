@@ -32,6 +32,7 @@ def get_id_list_v2(token, custom_type_id):
         res = requests.post(
             "https://reportedh5.17wanxiao.com/api/clock/school/rules", data=post_data
         )
+        print(res.json())
         return res.json()["customerAppTypeDto"]["ruleList"]
     except:
         return None
@@ -50,12 +51,15 @@ def get_id_list_v1(token):
             data=post_data,
         )
         if res.json()["appList"]:
+            app_list = res.json()["appList"][-1]["customerAppTypeRuleList"] \
+                if res.json()["appList"][-1]["customerAppTypeRuleList"] \
+                else res.json()["appList"][0]["customerAppTypeRuleList"]
             id_list = sorted(
-                res.json()["appList"][-1]["customerAppTypeRuleList"],
+                app_list,
                 key=lambda x: x["id"],
             )
             res_dict = [
-                {"custom_rule_id": j["id"], "template_id": f"clockSign{i + 1}"}
+                {"customerAppTypeId": j["id"], "templateid": f"clockSign{i + 1}"}
                 for i, j in enumerate(id_list)
             ]
             return res_dict
@@ -170,25 +174,25 @@ def campus_check_in(phone, token, post_dict, custom_rule_id):
         res = requests.post(
             "https://reportedh5.17wanxiao.com/sass/api/epmpics", json=check_json
         ).json()
-        if res["code"] != "10000":
-            log.warning(res)
-            return dict(
-                status=1,
-                res=res,
-                post_dict=post_dict,
-                check_json=check_json,
-                type=post_dict["templateid"],
-            )
-        else:
+        """
+        {'msg': '业务异常', 'code': '10007', 'data': '请在正确的打卡时间打卡'}
+        """
+        if res["code"] == "10000":
             log.info(res)
-            return dict(
-                status=1,
-                res=res,
-                post_dict=post_dict,
-                check_json=check_json,
-                type=post_dict["templateid"],
-            )
+        elif res['data'] == "areaStr can not be null":
+            log.warning("当前用户无法获取校内打卡地址信息，请前往配置文件，campus_checkin 下的 areaStr 设置地址信息")
+        elif res['data'] == "请在正确的打卡时间打卡":
+            log.warning( f'当前已不在该打卡时间范围内，{res["data"]}')
+        else:
+            log.warning(res)
+        return {
+            'status': 1,
+            'res': res,
+            'post_dict': post_dict,
+            'check_json': check_json,
+            'type': post_dict["templateid"]
+        }
     except:
         errmsg = f"```校内打卡请求出错```"
         log.warning("校内打卡请求出错")
-        return dict(status=0, errmsg=errmsg)
+        return {'status': 0, 'errmsg': errmsg}
