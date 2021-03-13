@@ -3,7 +3,7 @@ import time
 from login import CampusLogin
 from utils.config import load_config
 from api.wanxiao_push import wanxiao_qmsg_push, wanxiao_server_push, wanxiao_email_push
-from api.campus_check import get_id_list_v1, get_id_list_v2, get_campus_check_post, campus_check_in
+from api.campus_check import get_id_list_v1, get_id_list_v2, get_customer_type_id, get_campus_check_post, campus_check_in
 from api.healthy1_check import get_healthy1_check_post_json, healthy1_check_in
 from api.healthy2_check import get_healthy2_check_posh_json, healthy2_check_in
 from api.user_info import get_user_info
@@ -150,8 +150,10 @@ def check_in(user):
         log.info('当前并未开启校内打卡，暂不进行打卡操作')
     else:
         # 获取校内打卡ID
-        id_list = get_id_list_v2(token, custom_type_id=user_info['customerAppTypeId'])
-        if not id_list:
+        custom_type_id = user_info.get('customerAppTypeId', get_customer_type_id(token))
+        if custom_type_id:
+            id_list = get_id_list_v2(token, custom_type_id)
+        else:
             id_list = get_id_list_v1(token)
     
         if not id_list:
@@ -164,7 +166,7 @@ def check_in(user):
             # 获取校内打卡参数
             campus_dict = get_campus_check_post(
                 template_id=i['templateid'],
-                custom_rule_id=i['customerAppTypeId'],
+                custom_rule_id=i['id'],
                 stu_num=user_info['stuNo'],
                 token=token
             )
@@ -173,7 +175,7 @@ def check_in(user):
             rebase_post_json(campus_dict, campus_check_config['post_json'])
         
             # 校内打卡
-            campus_check_dict = campus_check_in(user['phone'], token, campus_dict, i['customerAppTypeId'])
+            campus_check_dict = campus_check_in(user['phone'], token, campus_dict, i['id'])
             check_dict_list.append(campus_check_dict)
             log.info("-" * 40)
     return check_dict_list
@@ -185,7 +187,7 @@ def main_handler(*args, **kwargs):
     raw_info = []
     
     # 加载用户配置文件
-    user_config_dict = load_config('./conf/user.json')
+    user_config_dict = load_config(kwargs['user_config_path'])
     for user_config in user_config_dict:
         if not user_config['phone']:
             continue
@@ -202,7 +204,7 @@ def main_handler(*args, **kwargs):
     
     # 统一推送
     if raw_info:
-        all_push_config = load_config('./conf/push.json')
+        all_push_config = load_config(kwargs['push_config_path'])
         if info_push(all_push_config, raw_info):
             pass
         else:
@@ -212,4 +214,4 @@ def main_handler(*args, **kwargs):
 
 
 if __name__ == "__main__":
-    main_handler()
+    main_handler(user_config_path='./conf/user.json', push_config_path='./conf/push.json')

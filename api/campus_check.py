@@ -32,7 +32,6 @@ def get_id_list_v2(token, custom_type_id):
         res = requests.post(
             "https://reportedh5.17wanxiao.com/api/clock/school/rules", data=post_data
         )
-        print(res.json())
         return res.json()["customerAppTypeDto"]["ruleList"]
     except:
         return None
@@ -64,6 +63,25 @@ def get_id_list_v1(token):
             ]
             return res_dict
         return None
+    except:
+        return None
+    
+    
+def get_customer_type_id(token):
+    """
+    通过校内模板id获取校内打卡具体的每个时间段id（初版,暂留）
+    :param token: 用户令牌
+    :return: 返回校内打卡id列表
+    """
+    post_data = {"appClassify": "DK", "token": token}
+    try:
+        res = requests.post(
+            "https://reportedh5.17wanxiao.com/api/clock/school/childApps",
+            data=post_data,
+        )
+        for app in res.json()["appList"]:
+            if '校内' in app['name']:
+                return app['id']
     except:
         return None
 
