@@ -35,7 +35,7 @@ def get_token(username, password, device_id):
     return None
 
 
-def rebase_post_json(dict1, dict2):
+def merge_post_json(dict1, dict2):
     for key, value in dict2.items():
         if value and key in dict1 and key != 'updatainfo':
             dict1[key] = value
@@ -102,7 +102,7 @@ def check_in(user):
         check_dict_list.append({"status": 0, "errmsg": errmsg})
         return check_dict_list
     
-    # 获取学校使用打卡模板Id
+    # 获取个人信息
     user_info = get_user_info(token)
     if not user_info:
         errmsg = f"{user['phone'][:4]}，获取个人信息失败，打卡失败"
@@ -120,10 +120,10 @@ def check_in(user):
         post_dict = get_healthy1_check_post_json(token)
         
         # 合并配置文件的打卡信息
-        rebase_post_json(post_dict, healthy1_check_config['post_json'])
+        merge_post_json(post_dict, healthy1_check_config['post_json'])
         
-        healthy_check_dict = healthy1_check_in(token, user['phone'], post_dict)
-        check_dict_list.append(healthy_check_dict)
+        healthy1_check_dict = healthy1_check_in(token, user['phone'], post_dict)
+        check_dict_list.append(healthy1_check_dict)
     elif healthy2_check_config['enable']:
         # 第二类健康打卡
         
@@ -138,9 +138,9 @@ def check_in(user):
         for i, j in healthy2_check_config['post_json'].items():
             if j:
                 post_dict[i] = j
-        healthy_check_dict = healthy2_check_in(token, user_info["customerId"], post_dict)
+        healthy2_check_dict = healthy2_check_in(token, user_info["customerId"], post_dict)
     
-        check_dict_list.append(healthy_check_dict)
+        check_dict_list.append(healthy2_check_dict)
     else:
         log.info('当前并未配置健康打卡方式，暂不进行打卡操作')
         
@@ -170,9 +170,8 @@ def check_in(user):
                 stu_num=user_info['stuNo'],
                 token=token
             )
-        
             # 合并配置文件的打卡信息
-            rebase_post_json(campus_dict, campus_check_config['post_json'])
+            merge_post_json(campus_dict, campus_check_config['post_json'])
         
             # 校内打卡
             campus_check_dict = campus_check_in(user['phone'], token, campus_dict, i['id'])

@@ -19,10 +19,8 @@ def wanxiao_server_push(sckey, check_info_list):
             if check_info["post_dict"].get("checkbox"):
                 post_msg = "\n".join(
                     [
-                        f"| {i['description']} | {j['value']} |"
-                        for i in check_info["post_dict"].get("checkbox")
-                        for j in check_info["post_dict"].get("updatainfo")
-                        if i["propertyname"] == j["propertyname"]
+                        f"| {i['description']} | {i['value']} |"
+                        for i in check_info["post_dict"]["checkbox"]
                     ]
                 )
             else:
@@ -54,7 +52,7 @@ def wanxiao_server_push(sckey, check_info_list):
     push_list.append(
         f"""
 >
-> [17wanxiaoCheckin-Actions](https://github.com/ReaJason/17wanxiaoCheckin-Actions)
+> [17wanxiaoCheckin](https://github.com/ReaJason/17wanxiaoCheckin-Actions)
 >
 >期待你给项目的star✨
 """

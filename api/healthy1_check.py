@@ -5,7 +5,7 @@
 @author：ReaJason
 @email_addr：reajason@163.com
 @blog_website：https://reajason.top
-@last_modify：2021/03/10
+@last_modify：2021/03/15
 """
 import time
 import json
@@ -115,7 +115,7 @@ def healthy1_check_in(token, phone, post_dict):
                     "res": res,
                     "post_dict": post_dict,
                     "check_json": check_json,
-                    "type": "healthy",
+                    "type": "healthy1",
                 }
             elif res['data'] == "areaStr can not be null":
                 log.warning('当前用户无法获取第一类健康打卡地址信息，请前往配置 user.json 文件，one_check 下的 areaStr 设置地址信息')
@@ -126,7 +126,7 @@ def healthy1_check_in(token, phone, post_dict):
                     "res": res,
                     "post_dict": post_dict,
                     "check_json": check_json,
-                    "type": "healthy",
+                    "type": "healthy1",
                 }
             else:
                 log.warning(res)

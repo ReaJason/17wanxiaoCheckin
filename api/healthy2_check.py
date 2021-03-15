@@ -5,7 +5,7 @@
 @author：ReaJason
 @email_addr：reajason@163.com
 @blog_website：https://reajason.top
-@last_modify：2021/03/10
+@last_modify：2021/03/15
 """
 import time
 import requests
@@ -109,7 +109,7 @@ def healthy2_check_in(token, custom_id, post_dict):
                     'checkbox': [{'description': key, 'value': value} for key, value in check_json.items()]
                 },
                 check_json=check_json,
-                type="healthy",
+                type="healthy2",
             )
         else:
             log.warning(res)
@@ -122,7 +122,7 @@ def healthy2_check_in(token, custom_id, post_dict):
                     'checkbox': [{'description': key, 'value': value} for key, value in check_json.items()]
                 },
                 check_json=check_json,
-                type="healthy",
+                type="healthy2",
             )
     except:
         errmsg = f"```打卡请求出错```"

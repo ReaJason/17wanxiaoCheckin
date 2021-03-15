@@ -5,7 +5,7 @@
 @author：ReaJason
 @email_addr：reajason@163.com
 @blog_website：https://reajason.top
-@last_modify：2021/03/10
+@last_modify：2021/03/15
 """
 import time
 import json
@@ -48,11 +48,11 @@ def get_id_list_v1(token):
         res = requests.post(
             "https://reportedh5.17wanxiao.com/api/clock/school/childApps",
             data=post_data,
-        )
+        ).json()
         if res.json()["appList"]:
-            app_list = res.json()["appList"][-1]["customerAppTypeRuleList"] \
-                if res.json()["appList"][-1]["customerAppTypeRuleList"] \
-                else res.json()["appList"][0]["customerAppTypeRuleList"]
+            app_list = res["appList"][-1]["customerAppTypeRuleList"] \
+                if res["appList"][-1]["customerAppTypeRuleList"] \
+                else res["appList"][0]["customerAppTypeRuleList"]
             id_list = sorted(
                 app_list,
                 key=lambda x: x["id"],
@@ -78,8 +78,8 @@ def get_customer_type_id(token):
         res = requests.post(
             "https://reportedh5.17wanxiao.com/api/clock/school/childApps",
             data=post_data,
-        )
-        for app in res.json()["appList"]:
+        ).json()
+        for app in res["appList"]:
             if '校内' in app['name']:
                 return app['id']
     except:
