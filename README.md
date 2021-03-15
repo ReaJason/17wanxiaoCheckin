@@ -1,153 +1,82 @@
-# 🌈17wanxiaoCheckin-Actions
+<div align="center"> 
+<h1 align="center">
+🌈17wanxiaoCheckin
+</h1>
 
-## 由于目前完美校园就登录做了设备检测，我不是大佬，只是个脚本小子，现在用此脚本已无法打卡，建议自寻使用其他方法。大家也差不多回家了，让我们美好的一天从早起打卡开始吧，感谢大家的Star✨。
+[![](https://img.shields.io/badge/author-ReaJason-red "作者")](https://github.com/ReaJason/)
+[![](https://img.shields.io/badge/dynamic/json?logo=github&label=GitHub+Followers&labelColor=282c34&color=181717&query=%24.data.totalSubs&url=https%3A%2F%2Fapi.spencerwoo.com%2Fsubstats%2F%3Fsource%3Dgithub%26queryKey%3DReaJason&longCache=true "关注数")](https://github.com/ReaJason)
+[![Bilibili](https://img.shields.io/badge/dynamic/json?logo=data%3Aimage%2Fpng%3Bbase64%2CiVBORw0KGgoAAAANSUhEUgAAAGAAAABgCAYAAADimHc4AAAD7ElEQVR4nO2dW9WrMBCFK6ESkFAJSKiESqgEHCABCZWAhEpAAhL2ecik5dDc%2FpXLBDLfWnlqy0xmJ5BMQnq5CIIgCIIgCIIgCIIgCEIBAHQAemYfrgCunD6wAKAHsEKxALgx+bCQD8%2FS9tmgVqeDr1lLigDgZvDhXso+K9TyTBQRwRJ8AHjntl0Flh5QRAQK%2FmKxPeayWx2OXpBNBKiHvi34b7T2MC4pAvW6twR%2FRwkRKPizBN8CgEcuESj4Lwm+BwBjahEk+H8EwJRKhOaCDzW8e1JLfkUUH1NgmR3XmHffHR1l+72BSs8d7w8U+JDAnZERQMcV+CtUi7dNqFqibB4J7vtrq7xKCuAasbTMXCL4T+5aVk6+2xHUrWdhruAR6HIJcOeu2UHI8zyAe2ytWfEdWz9PVvQ8YAmIQ5dDAB9LFsMVAv8oMO2zAGrC5WNIarRiAuKR9jYEd9pY08aa6uUzIHGRdkgKd8pY0yc1WjEBAqypDYoAG0QAZkQAZkQAZkQAZk4vANQenjsSzS3I%2FwcSbXU5jQBUkRtdf4Rar90v8kSv3+I3ffCCSpk8I%2Fw+lgDkdI%2Fv2rEp2CaiWm1AsDQLlDAD+dlFXLMeAaCSeLZdaSFE5VUQNot38cKuEeBgAsSuG0flVZBmEanbXfNQAsS0fgBYIn2fIu3%2FBBMHEyBmDXlFfA8IzeHb+Ems4WAChKykrVA9ZfsQTL57jXzRg4A5wC%2FA8N4ADiZAZwm2XjW75Qh2KOTfA0p4kygPw28OJcCVgn3nDnYo2EwEYRgGH0qAMyICMCMCMCMCMCMCMCMCMCMCfP3qwHDOQ4AAUekTk8FaBRihJnZdYbvtCGC7LvmkM63GjVDINPFrQgCq5ETXfmMzI90FXzPvfqt7x4rEu%2FZaEcCUxFvgz2zO+BUn6UkoaEEAsptiMSX5e8FoRYCN7cVgb4Vq7U%2FH50Pq4JNP7Qiw8UFnJwcK+tXy+Wj6PLEvPgHSHv5UgwA1IQIwwyFAyLJin9RoxYgAzAQIkPwNmf26busC+OIx5TDqo5nDT+F%2FSS%2F9CYzwb+No49zNy2evkYv0LywGGAXUvp6eSneycqOic0w20k7CNgKE7jJunSGLACTCxF27ylmQc98T5MQUH49swd+I0HPXslLKnT0N+wnkrTKi9JZL%2FL9i1SorMmdeQ4TQQ7OFMxIMzGD45w8nUL1im7efENZLJpgPSw0pfz0cdt4U3230Td%2FTvx2R6d2FrHhEWLkq5PELOMsRPHCPnAZGv1xJteL7jbJiaW3sB2nDvPC%2FosSYvjRQz4cJ6n7KO3rYQL7M+L6nVtfDVRAEQRAEQRAEQRAEIZ5%2FSAXmdfXaoQsAAAAASUVORK5CYII%3D&label=bilibili+fans&labelColor=FE7398&color=282c34&query=%24.data.totalSubs&url=https%3A%2F%2Fapi.spencerwoo.com%2Fsubstats%2F%3Fsource%3Dbilibili%26queryKey%3D233683051&longCache=true)](https://space.bilibili.com/233683051)
+<br>
+![](https://img.shields.io/github/stars/ReaJason/17wanxiaoCheckin-Actions?style=social "Star数量")
+![](https://img.shields.io/github/forks/ReaJason/17wanxiaoCheckin-Actions?style=social "Fork数量")
+<br>
+![](https://img.shields.io/github/license/ReaJason/17wanxiaoCheckin-Actions "协议")
+![](https://img.shields.io/github/v/release/ReaJason/17wanxiaoCheckin-Actions "release版本")
 
-------
+</div>
 
-**🌈2020.01.24：关闭 GitHub Actions，脚本已失效，请勿 fork**
+## ✨项目介绍
 
-**🤺2021.01:21：试图修复可能会出现的登录失败，修复账号打卡失败脚本停止，添加 QQ 邮箱推送（写 bug ）**
+&emsp;&emsp;伴随着疫情的到来，学校为了解在校师生的健康状况，全校师生都规定在特定的时间进行健康打卡 or 校内打卡，本项目旨在帮助使用完美校园打卡的在校师生提供帮助，每天指定时间进行自动打卡，从每天指定时间打卡的压力中解放出来，全身心地投入到社会主义建设之中去。
 
-**🎭2021.01.20：完美校园更换过登录接口，之前的在 GitHub 上无法使用，已修复（由 [@llkhs](https://github.com/llkhs) 提供方法）**
+&emsp;&emsp;本项目使用了 `requests`、`json5`、`pycryptodome` 第三方库，2.0 版本迎来项目重构，打卡数据错误修改方法，不再是以前的修改代码（不懂代码容易改错或无法下手），而是通过直接修改配置文件即可。
 
-**🎐2021.01.19：注释掉校内打卡相关代码，添加 Server 酱推送失败重试代码**
 
-**💦2021.01.16：由于 GitHub Actions 的服务器原因，添加腾讯云函数方案**
 
-**🚀2021.01.08：增加一些代码注释方便大家看懂代码，编写 Wiki 方便提供帮助**
+## 🔰项目功能
 
-**🦄2020.12.02：更新校内打卡，（健康打卡，校内打卡）我全都要！**
+* [x] 完美校园模拟登录获取 token
+* [x] 自动获取上次提交的打卡数据，也可通过配置文件修改
+* [x] 支持健康打卡和校内打卡
+* [x] 支持多人打卡配置，可单人自定义推送，也可统一推送
+* [x] 支持邮箱、Qmsg、Server 酱推送打卡消息
 
-**💫2020.11.23：支持多人打卡，重写了一下代码**
 
-**⚡2020.11.16：本项目已更新，使用本项目，你不需要抓包就可以使用（理论上大概......）**
 
-------
+## 🎨配置文件
 
-[中南林业科技大学](https://www.csuft.edu.cn/) 测试可用，欢迎大家 fork 测试使用，如果可用的话，可以开 [issue](https://github.com/ReaJason/17wanxiaoCheckin-Actions/issues) 让更多人知道
 
-感谢 [@zhongbr](https://github.com/zhongbr) 的完美校园逆向登录分析代码的分享：[完美校园模拟登录](https://github.com/zhongbr/wanmei_campus)
 
-之前的抓包教程请前往：[完美校园抓包打卡](https://github.com/ReaJason/17wanxiaoCheckin-Actions/blob/master/README_LAST.md)，本项目使用方法，请参考此页面下面
+### 💃用户配置
 
-图片无法加载，可以前往我的博客查看 [使用方法](https://reajason.top/2020/06/28/17wanxiaoCheckin/#%E4%B8%89%E3%80%81%E4%BD%BF%E7%94%A8%E6%96%B9%E6%B3%95)（加载也可能很慢）
+- 打卡用户配置文件位于：`conf/user.json`
+- 整个 json 文件使用一个 `[]` 列表用来存储打卡用户数据，每一个用户占据了一个 `{}`键值对，初次修改务必填写的数据为：`phone`、`password`、`device_id`（获取方法：[蓝奏云](https://lingsiki.lanzous.com/iQamDmt165i)，下载解压使用）、健康打卡的开关（根据截图判断自己属于哪一类[【1】](https://cdn.jsdelivr.net/gh/ReaJason/17wanxiaoCheckin-Actions/Pictures/one.png)、[【2】](https://cdn.jsdelivr.net/gh/ReaJason/17wanxiaoCheckin-Actions/Pictures/two.png)），校内打卡开关（有则开），推送设置 `push`。
+- 关于 `post_json`，如若打卡推送数据中无错误，则不用管，若有 null，或其他获取不到的情况，则酌情修改即可，和推送是一一对应的。
+- 如果多人打卡，则复制单个用户完整的 `{}`，紧接在上个用户其后即可。
 
-------
 
-## 🌟功能介绍
 
-1. 完美校园模拟登录获取 token
-2. 自动获取上次提交的打卡数据
-3. ~~自动化任务分三次运行~~（ps：目前已关闭校内打卡）
-   - `上午六点多`：健康打卡
-4. 微信推送打卡消息
+### 🤝统一推送配置
 
-## 💢使用方法（已失效） —— 可使用 [腾讯云函数](https://github.com/ReaJason/17wanxiaoCheckin-Actions/blob/master/17wanxiaoCheckin-SCF.md)
+- 统一推送配置文件位于：`conf/push.json`
+- 若多用户打卡使用统一推送而不是个别单独推送则在此文件下进行推送的配置
 
-1. 请先确保在**完美校园 APP**中进入健康打卡界面，信息能够正确的自动填写，并手动打一次卡（只能是 app，小程序不行！）（没有自动填写的项，可以自行修改代码）
 
-2. 点击右上角的 `fork`，`fork` 本项目到自己仓库中
 
-   
+## 💦使用方法（云函数）
 
-   ![](https://cdn.jsdelivr.net/gh/ReaJason/17wanxiaoCheckin-Actions/Pictures/click_fork.png)
+- 云函数 — 函数服务 — 新建云函数
+- 自定义创建 — 本地上传 zip 包（17wanxiaoCheckin-SCF v2.0.zip：[蓝奏云](https://lingsiki.lanzous.com/b0ekhmcxe)，密码：2333）
+- 上传之后往下滑 — 触发器配置 — 自定义创建 — 触发周期：自定义触发 — Cron 表达式：0 0 6,14 * * * * — 完成 — 立即跳转
+- 函数管理 — 函数配置 — 编辑 — 执行超时时间：900 — 保存
+- 函数代码 — `src/conf/user.json` — 根据上方的用户配置文件介绍以及里面的注释进行设置【第一次使用推荐 QQ 邮箱推送，数据推送全面】
+- 测试 — 若弹框【检测到您的函数未部署......】选是 — 查看执行日志以及推送信息（执行失败请带上执行日志完整截图反馈）
+- 第一类健康打卡成功结果：`{'msg': '成功', 'code': '10000', 'data': 1}`，显示打卡频繁也算
+- 第二类健康打卡成功结果：`{'code': 0, 'msg': '成功'}`
+- 校内打卡成功结果：`{'msg': '成功', 'code': '10000', 'data': 1}`
+- 由于前面使用软件获取了 device_id，所以请使用支付宝小程序查看打卡结果是否记录上去，以免手机登录 device_id 失效
 
-   
 
-3. 开启 `Actions`
 
-   
 
-   ![](https://cdn.jsdelivr.net/gh/ReaJason/17wanxiaoCheckin-Actions/Pictures/start_action.png)
+## 🙋‍脚本有问题
+* 有问题可提 [issue](https://github.com/ReaJason/17wanxiaoCheckin-Actions/issues)
+* 也可加群反馈 [交流群](https://github.com/ReaJason/17wanxiaoCheckin-Actions/issues/30)
 
-   
 
-   ![](https://cdn.jsdelivr.net/gh/ReaJason/17wanxiaoCheckin-Actions/Pictures/end_actions.png)
 
-   
+## 📜FQA
 
-4. 设置三个 `secrets`  字段：`USERNAME`、`PASSWORD`、`SCKEY`（对应就是账号，密码以及 Server 酱）
+- 若第一类健康打卡或校内大卡打卡推送显示，需要修改对应位置下的 areaStr，修改格式为：`"areaStr": "{\"address\":\"天心区青园路251号中南林业科技大学\",\"text\":\"湖南省-长沙市-天心区\",\"code\":\"\"}"` ，`address`：对应手机打卡界面的下面一行，`text`：对应手机打卡界面的上面一行，根据自己的来，上面填什么就是什么，若是校内打卡的地址获取不到，可查看健康打卡的打卡数据推送里面的 areaStr 复制即可。
+- 等待反馈......
 
-   1. 如果是多人打卡的话：
-      - USERNAME字段：手机号1,手机号2,......（与下面密码对应），例如：`1737782***,13602***`
-      - PASSWORD字段：密码1,密码2,......  （与上面账号对应），例如：`123456,456789`
-      - SCKEY字段：填写一个即可，例如：`SCU90543*******`，没有请前往 [Server酱](https://sc.ftqq.com/3.version) 注册获取
-
-   
-
-   ![](https://cdn.jsdelivr.net/gh/ReaJason/17wanxiaoCheckin-Actions/Pictures/new_secrets.png)
-
-   
-
-   ![](https://cdn.jsdelivr.net/gh/ReaJason/17wanxiaoCheckin-Actions/Pictures/secrets_details.png)
-
-   
-
-   ![](https://cdn.jsdelivr.net/gh/ReaJason/17wanxiaoCheckin-Actions/Pictures/end_secrets.png)
-
-   
-
-5. 修改 `README.md` 选第一个就好，不要选第二个Create a new branch***（为什么教着做都不听话，泪目），测试一次
-
-   
-
-   ![](https://cdn.jsdelivr.net/gh/ReaJason/17wanxiaoCheckin-Actions/Pictures/modify_readme.png)
-
-   
-
-   ![](https://cdn.jsdelivr.net/gh/ReaJason/17wanxiaoCheckin-Actions/Pictures/end_modify.png)
-
-   
-
-6. 查看 `Actions` 运行情况，以及微信推送情况（检查json 字段中的 areaStr 是否为自己所在地址，如果不在，请一定要修改代码，因为打卡的地址不对可不行；如果 Message 有值为 None，请一定要修改代码，因为该值无法自动填写），**至此每日六点多将会自行打卡**
-
-   
-
-   ![](https://cdn.jsdelivr.net/gh/ReaJason/17wanxiaoCheckin-Actions/Pictures/check_status.png)
-
-   
-
-   ![](https://cdn.jsdelivr.net/gh/ReaJason/17wanxiaoCheckin-Actions/Pictures/end_check.png)
-
-
-## ✅Q&A
-
-### 1、怎么图片都无法加载出来，看了个寂寞？
-
-可以前往我的博客查看 [使用方法](https://reajason.top/2020/06/28/17wanxiaoCheckin/#%E4%B8%89%E3%80%81%E4%BD%BF%E7%94%A8%E6%96%B9%E6%B3%95)
-
-### 2、fork之后，修改README.md并没有触发actions？
-
-请进入 Actions，Enable workflow
-
-![enable](https://cdn.jsdelivr.net/gh/LingSiKi/images/img/enable.png)
-
-### 3、我们学校要求打卡的时间不一样，这个自动运行的时间该怎么修改？
-
-进入 `.github/workflows/run.yml `修改时间，请不要搁那掐着秒算程序运行，你设置好了，明天就一定能好好运行，Giuhub Actions大概会有10~20分钟的延迟
-
-```python
-"""
-这里的cron就是脚本运行时间，22,4,9对应的时间是UTC时，对应北京时间早上六点，中午十二点，下午五点
-详细对应关系请查看：http://timebie.com/cn/universalbeijing.php
-
-只有健康打卡的小伙伴可以只留着22就可以了，这样其余两个时间就不会打卡
-如果害怕程序报错导致上午健康打卡没打，可设置6点和7点各运行一次即：0 22,23 * * *
-GitHub Actions 自动化任务执行有一定延迟，大概10~60分钟不等......
-"""
-on:
-  push:
-    branches: [ master ]
-  pull_request:
-    branches: [ master ]
-  schedule:
-    - cron: 0 22,4,9 * * *
-```
-
-### 4、程序报错显示密码错误，还有 * 次机会？
-
-请立马修改 secrets 的密码再尝试运行
-
-### 5、健康打卡问题汇总请前往 [wiki](https://github.com/ReaJason/17wanxiaoCheckin-Actions/wiki#%E5%81%A5%E5%BA%B7%E6%89%93%E5%8D%A1%E5%B8%B8%E8%A7%81%E9%97%AE%E9%A2%98%E6%B1%87%E6%80%BB)
-
-### 6、校内打卡问题汇总请前往 [wiki](https://github.com/ReaJason/17wanxiaoCheckin-Actions/wiki#%E6%A0%A1%E5%86%85%E6%89%93%E5%8D%A1%E5%B8%B8%E8%A7%81%E9%97%AE%E9%A2%98%E6%B1%87%E6%80%BB)
