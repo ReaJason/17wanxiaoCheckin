@@ -2,7 +2,7 @@ import time
 
 from login import CampusLogin
 from utils.config import load_config
-from api.wanxiao_push import wanxiao_qmsg_push, wanxiao_server_push, wanxiao_email_push
+from api.wanxiao_push import wanxiao_qmsg_push, wanxiao_server_push, wanxiao_email_push, wanxiao_pipe_push
 from api.campus_check import get_id_list_v1, get_campus_check_post, campus_check_in
 from api.healthy1_check import get_healthy1_check_post_json, healthy1_check_in
 from api.healthy2_check import get_healthy2_check_posh_json, healthy2_check_in
@@ -73,12 +73,20 @@ def info_push(push_dict, raw_info):
         else:
             flag.append(0)
             log.warning(push['errmsg'])
-    
     if push_dict['qmsg']['enable']:
         push = wanxiao_qmsg_push(
             push_dict['qmsg']['key'], push_dict['qmsg']['qq_num'],
             push_dict['qmsg']['type'], raw_info
         )
+        if push['status']:
+            flag.append(1)
+            log.info(push['msg'])
+        else:
+            flag.append(0)
+            log.warning(push['errmsg'])
+
+    if push_dict['pipehub']['enable']:
+        push = wanxiao_pipe_push(push_dict['pipehub']['key'], raw_info)
         if push['status']:
             flag.append(1)
             log.info(push['msg'])

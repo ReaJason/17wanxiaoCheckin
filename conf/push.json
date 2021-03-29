@@ -16,5 +16,9 @@
     "key": "**",
     "type": "send",  //  send 私聊消息推送，group 群消息推送
     "qq_num": "**"  // 上面设置send，则填写接受推送的qq号，group则填写群号
+  },
+  "pipehub": { //  PipeHub：https://www.pipehub.net/
+    "enable": false,
+    "key": ""
   }
 }

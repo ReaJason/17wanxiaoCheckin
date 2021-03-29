@@ -70,6 +70,10 @@
         "key": "**",  // 推送所必须的 key
         "type": "send",  //  send 私聊消息推送，group 群消息推送
         "qq_num": "**"  // 上面设置send，则填写接受推送的qq号，group则填写群号，根据官网要求群号需要邮箱申请才能推送
+      },
+      "pipehub": { //  PipeHub：https://www.pipehub.net/
+        "enable": false,
+        "key": ""
       }
     }
   },
@@ -143,6 +147,10 @@
         "key": "",  // 推送所必须的 key
         "type": "send",  //  send 私聊消息推送，group 群消息推送
         "qq_num": ""  // 上面设置send，则填写接受推送的qq号，group则填写群号，根据官网要求群号需要邮箱申请才能推送
+      },
+      "pipehub": { //  PipeHub：https://www.pipehub.net/
+        "enable": false,
+        "key": ""
       }
     }
   },
