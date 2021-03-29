@@ -76,7 +76,7 @@ def wanxiao_email_push(send_email, send_pwd, receive_email, smtp_address, smtp_p
 </code></pre>
 </details>
 <details>
-<summary style="font-family: 'Microsoft YaHei UI',serif; color: black;" >>>>填写数据抓包详情（便于代码的编写）<<<</summary>
+<summary style="font-family: 'Microsoft YaHei UI',serif; color: black;" >>>>填写数据抓包详情（用于 updatainfo 数据的修改）<<<</summary>
 <pre><code>
 {json.dumps(check['post_dict']['updatainfo_detail'], sort_keys=True, indent=4, ensure_ascii=False)}
 </code></pre>
@@ -171,6 +171,7 @@ def wanxiao_qmsg_push(key, qq_num, send_type, check_info_list):
             push_list.append(check_info['errmsg'])
     return qmsg_push(key, qq_num, "\n".join(push_list), send_type)
 
+
 def wanxiao_pipe_push(callbackCode, check_info_list):
     utc8_time = datetime.datetime.utcnow() + datetime.timedelta(hours=8)
     push_list = [f'打卡时间： {utc8_time.strftime("%Y-%m-%d %H:%M:%S")}']
@@ -185,5 +186,4 @@ def wanxiao_pipe_push(callbackCode, check_info_list):
 """)
         else:
             push_list.append(check_info['errmsg'])
-    print(push_list)
     return pipe_push(callbackCode, "\n".join(push_list).encode())
