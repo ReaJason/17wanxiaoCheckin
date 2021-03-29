@@ -3,7 +3,7 @@
 🌈17wanxiaoCheckin
 </h1>
 
-[![](https://img.shields.io/badge/author-ReaJason-red "作者")](https://github.com/ReaJason/)
+[![](https://img.shields.io/badge/Author-ReaJason-red "作者")](https://github.com/ReaJason/)
 [![](https://img.shields.io/badge/dynamic/json?logo=github&label=GitHub+Followers&labelColor=282c34&color=181717&query=%24.data.totalSubs&url=https%3A%2F%2Fapi.spencerwoo.com%2Fsubstats%2F%3Fsource%3Dgithub%26queryKey%3DReaJason&longCache=true "关注数")](https://github.com/ReaJason)
 [![Bilibili](https://img.shields.io/badge/dynamic/json?logo=data%3Aimage%2Fpng%3Bbase64%2CiVBORw0KGgoAAAANSUhEUgAAAGAAAABgCAYAAADimHc4AAAD7ElEQVR4nO2dW9WrMBCFK6ESkFAJSKiESqgEHCABCZWAhEpAAhL2ecik5dDc%2FpXLBDLfWnlqy0xmJ5BMQnq5CIIgCIIgCIIgCIIgCEIBAHQAemYfrgCunD6wAKAHsEKxALgx+bCQD8%2FS9tmgVqeDr1lLigDgZvDhXso+K9TyTBQRwRJ8AHjntl0Flh5QRAQK%2FmKxPeayWx2OXpBNBKiHvi34b7T2MC4pAvW6twR%2FRwkRKPizBN8CgEcuESj4Lwm+BwBjahEk+H8EwJRKhOaCDzW8e1JLfkUUH1NgmR3XmHffHR1l+72BSs8d7w8U+JDAnZERQMcV+CtUi7dNqFqibB4J7vtrq7xKCuAasbTMXCL4T+5aVk6+2xHUrWdhruAR6HIJcOeu2UHI8zyAe2ytWfEdWz9PVvQ8YAmIQ5dDAB9LFsMVAv8oMO2zAGrC5WNIarRiAuKR9jYEd9pY08aa6uUzIHGRdkgKd8pY0yc1WjEBAqypDYoAG0QAZkQAZkQAZkQAZk4vANQenjsSzS3I%2FwcSbXU5jQBUkRtdf4Rar90v8kSv3+I3ffCCSpk8I%2Fw+lgDkdI%2Fv2rEp2CaiWm1AsDQLlDAD+dlFXLMeAaCSeLZdaSFE5VUQNot38cKuEeBgAsSuG0flVZBmEanbXfNQAsS0fgBYIn2fIu3%2FBBMHEyBmDXlFfA8IzeHb+Ems4WAChKykrVA9ZfsQTL57jXzRg4A5wC%2FA8N4ADiZAZwm2XjW75Qh2KOTfA0p4kygPw28OJcCVgn3nDnYo2EwEYRgGH0qAMyICMCMCMCMCMCMCMCMCMCMCfP3qwHDOQ4AAUekTk8FaBRihJnZdYbvtCGC7LvmkM63GjVDINPFrQgCq5ETXfmMzI90FXzPvfqt7x4rEu%2FZaEcCUxFvgz2zO+BUn6UkoaEEAsptiMSX5e8FoRYCN7cVgb4Vq7U%2FH50Pq4JNP7Qiw8UFnJwcK+tXy+Wj6PLEvPgHSHv5UgwA1IQIwwyFAyLJin9RoxYgAzAQIkPwNmf26busC+OIx5TDqo5nDT+F%2FSS%2F9CYzwb+No49zNy2evkYv0LywGGAXUvp6eSneycqOic0w20k7CNgKE7jJunSGLACTCxF27ylmQc98T5MQUH49swd+I0HPXslLKnT0N+wnkrTKi9JZL%2FL9i1SorMmdeQ4TQQ7OFMxIMzGD45w8nUL1im7efENZLJpgPSw0pfz0cdt4U3230Td%2FTvx2R6d2FrHhEWLkq5PELOMsRPHCPnAZGv1xJteL7jbJiaW3sB2nDvPC%2FosSYvjRQz4cJ6n7KO3rYQL7M+L6nVtfDVRAEQRAEQRAEQRAEIZ5%2FSAXmdfXaoQsAAAAASUVORK5CYII%3D&label=bilibili+fans&labelColor=FE7398&color=282c34&query=%24.data.totalSubs&url=https%3A%2F%2Fapi.spencerwoo.com%2Fsubstats%2F%3Fsource%3Dbilibili%26queryKey%3D233683051&longCache=true)](https://space.bilibili.com/233683051)
 <br>
@@ -29,7 +29,7 @@
 * [x] 自动获取上次提交的打卡数据，也可通过配置文件修改
 * [x] 支持健康打卡和校内打卡
 * [x] 支持多人打卡配置，可单人自定义推送，也可统一推送
-* [x] 支持邮箱、Qmsg、Server 酱、PipeHub推送打卡消息
+* [x] 支持邮箱、Qmsg、Server 酱、PipeHub 推送打卡消息
 
 
 
@@ -56,15 +56,51 @@
 
 ## 💦使用方法（云函数）
 
+> 详细图文教程请前往：[博客](https://reajason.top/2021/03/19/17wanxiaocheckinscf/)
+
 - 云函数 — 函数服务 — 新建云函数
+
 - 自定义创建 — 本地上传 zip 包（17wanxiaoCheckin-SCF v2.0.zip：[蓝奏云](https://lingsiki.lanzous.com/b0ekhmcxe)，密码：2333）
+
 - 上传之后往下滑 — 触发器配置 — 自定义创建 — 触发周期：自定义触发 — Cron 表达式：0 0 6,14 * * * * — 完成 — 立即跳转
+
 - 函数管理 — 函数配置 — 编辑 — 执行超时时间：900 — 保存
+
 - 函数代码 — `src/conf/user.json` — 根据上方的用户配置文件介绍以及里面的注释进行设置【第一次使用推荐 QQ 邮箱推送，数据推送全面】
+
 - 测试 — 若弹框【检测到您的函数未部署......】选是 — 查看执行日志以及推送信息（执行失败请带上执行日志完整截图反馈）
+
 - 第一类健康打卡成功结果：`{'msg': '成功', 'code': '10000', 'data': 1}`，显示打卡频繁也算
+
 - 第二类健康打卡成功结果：`{'code': 0, 'msg': '成功'}`
+
 - 校内打卡成功结果：`{'msg': '成功', 'code': '10000', 'data': 1}`
+
+- 如果你们学校会记录打卡成功与否可直接在支付宝小程序查看是否记录上去（手机 app 登录的话之前获取的 device_id 就失效了）
+
+- 最后检查推送数据，如果表格中有 None，请根据第二行的信息，搭配第一行推送信息的格式，修改配置文件
+
+  - 打开第一行，找到 updatainfo 这个东西，下面的有 null 的对应就是表格中的 None，记住它的 propertyname
+
+  - 打开第二行，找到对应 perpertyname 的部分，根据 checkValue 的 text 选择你需要的选项，温度自己填个值就可
+
+  - 打开配置文件，找到 post_json 下的 updatainfo，在里面加入你需要修改的值，格式和第一行里面的打卡数据一样
+
+  - ```json
+    "updatainfo":[
+    	{
+        	"propertyname": "temperature",  // 这个为第一行中找到值为 null 的那一项
+            "value": "35.7"  // 这个值为你想改的值，第二行中获取，如果是温度，自己填仔细想的即可
+        },
+        {
+        	"propertyname": "wengdu",
+        	"value": "36.4"
+        }
+    ]
+    ```
+
+     
+
 - 由于前面使用软件获取了 device_id，所以请使用支付宝小程序查看打卡结果是否记录上去，以免手机登录 device_id 失效
 
 
