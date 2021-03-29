@@ -5,7 +5,7 @@
 @author：ReaJason
 @email_addr：reajason@163.com
 @blog_website：https://reajason.top
-@last_modify：2021/03/10
+@last_modify：2021/03/15
 """
 import time
 import requests
@@ -27,14 +27,14 @@ def get_healthy2_check_posh_json(token):
                 timeout=10,
             ).json()
         except:
-            log.warning("第二类健康打卡完美校园打卡post参数获取失败，正在重试...")
+            log.warning("完美校园第二类健康打卡post参数获取失败，正在重试...")
             time.sleep(1)
             continue
         if res["code"] == 0:
-            log.info("第二类健康打卡完美校园打卡post参数获取成功")
+            log.info("完美校园第二类健康打卡post参数获取成功")
             return res["data"]
         else:
-            log.warning(f"第二类健康打卡完美校园打卡post参数获取失败，{res}")
+            log.warning(f"完美校园第二类健康打卡post参数获取失败，{res}")
     return None
 
 
@@ -109,7 +109,7 @@ def healthy2_check_in(token, custom_id, post_dict):
                     'checkbox': [{'description': key, 'value': value} for key, value in check_json.items()]
                 },
                 check_json=check_json,
-                type="healthy",
+                type="healthy2",
             )
         else:
             log.warning(res)
@@ -122,7 +122,7 @@ def healthy2_check_in(token, custom_id, post_dict):
                     'checkbox': [{'description': key, 'value': value} for key, value in check_json.items()]
                 },
                 check_json=check_json,
-                type="healthy",
+                type="healthy2",
             )
     except:
         errmsg = f"```打卡请求出错```"
