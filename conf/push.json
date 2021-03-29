@@ -5,7 +5,7 @@
     "smtp_port": 465,  // stmp服务端口
     "send_email": "***@qq.com",  // 发送邮箱的邮箱地址
     "send_pwd": "***",  // 发送邮箱的邮箱授权码
-    "receive_email": "***@qq.com"  // 接收信息的邮箱地址
+    "receive_email": "***@qq.com"  // 接收信息的邮箱地址，可自己给自己发
   },
   "wechat": {  //  Server酱·Turbo版：https://sct.ftqq.com/
     "enable": false,

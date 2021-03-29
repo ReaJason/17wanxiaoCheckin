@@ -4,7 +4,7 @@
     "welcome": "用户一，这是一条欢迎语，每次打卡前会打印这句话，用来标记当前打卡用户，如：正在为 *** 打卡......",
     "phone": "",  // 完美校园登录账号
     "password": "",  // 完美校园登录密码
-    "device_id": "",  // 已验证完美校园登录设备ID
+    "device_id": "",  // 已验证完美校园登录设备ID，获取方式为下载蓝奏云链接中的 RegisterDeviceID.zip
     "healthy_checkin": {
       "one_check": {  // 第一类健康打卡
         "enable": false,  // true 为打开，false 为关闭
@@ -59,7 +59,7 @@
         "smtp_port": 465,  // stmp服务端口
         "send_email": "***@qq.com",  // 发送邮箱的邮箱地址
         "send_pwd": "****",  // 发送邮箱的邮箱授权码
-        "receive_email": "**@qq.com"  // 接收信息的邮箱地址
+        "receive_email": "**@qq.com"  // 接收信息的邮箱地址，可自己给自己发
       },
       "wechat": {  //  Server酱·Turbo版：https://sct.ftqq.com/
         "enable": false,  // true 为打开，false 为关闭
@@ -81,7 +81,7 @@
     "welcome": "用户二，这是一条欢迎语，每次打卡前会打印这句话，用来标记当前打卡用户，如：正在为 *** 打卡......",
     "phone": "",  // 完美校园登录账号
     "password": "",  // 完美校园登录密码
-    "device_id": "",  // 已验证完美校园登录设备ID
+    "device_id": "",  // 已验证完美校园登录设备ID，获取方式为下载蓝奏云链接中的 RegisterDeviceID.zip
     "healthy_checkin": {
       "one_check": {  // 第一类健康打卡
         "enable": false,  // true 为打开，false 为关闭
@@ -136,7 +136,7 @@
         "smtp_port": 465,  // stmp服务端口
         "send_email": "***@qq.com",  // 发送邮箱的邮箱地址
         "send_pwd": "****",  // 发送邮箱的邮箱授权码
-        "receive_email": "****@qq.com"  // 接收信息的邮箱地址
+        "receive_email": "****@qq.com"  // 接收信息的邮箱地址，可自己给自己发
       },
       "wechat": {  //  Server酱·Turbo版：https://sct.ftqq.com/
         "enable": false,  // true 为打开，false 为关闭
