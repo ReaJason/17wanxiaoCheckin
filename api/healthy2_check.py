@@ -69,7 +69,7 @@ def healthy2_check_in(token, custom_id, post_dict):
         "collegeId": post_dict["collegeId"],
         "majorId": post_dict["majorId"],
         "classId": post_dict["classId"],
-        "classDescribe": post_dict["classDescribeAll"],
+        "classDescribe": post_dict["classDescribe"],
         "temperature": post_dict["temperature"],
         "confirmed": post_dict["confirmed"],
         "isolated": post_dict["isolated"],
