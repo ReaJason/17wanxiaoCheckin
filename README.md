@@ -60,7 +60,7 @@
 
 - 云函数 — 函数服务 — 新建云函数
 
-- 自定义创建 — 本地上传 zip 包（17wanxiaoCheckin-SCF v2.0.zip：[蓝奏云](https://lingsiki.lanzous.com/b0ekhmcxe)，密码：2333）
+- 自定义创建 — 本地上传 zip 包（17wanxiaoCheckin-SCF v2.1.zip：[蓝奏云](https://lingsiki.lanzous.com/b0ekhmcxe)，密码：2333）
 
 - 上传之后往下滑 — 触发器配置 — 自定义创建 — 触发周期：自定义触发 — Cron 表达式：0 0 6,14 * * * * — 完成 — 立即跳转
 
