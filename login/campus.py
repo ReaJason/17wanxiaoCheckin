@@ -25,9 +25,9 @@ urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 class CampusLogin:
     __slots__ = ['login_info']
 
-    def __init__(self, phone_num, device_id, app_version=10535102,
-                 user_agent="Dalvik/2.1.0 (Linux; U; Android 6.0.1; MuMu Build/V417IR)",
-                 phone_code="raphael", sys_type="android", sys_version="6.0.1", phone_model="MuMu"
+    def __init__(self, phone_num, device_id, app_version=10536101,
+                 user_agent="Dalvik/2.1.0 (Linux; U; Android 11; Redmi K20 Pro Premium Edition Build/RKQ1.200826.002)",
+                 phone_code="raphael", sys_type="android", sys_version="11", phone_model="Redmi K20 Pro Premium Edition"
                  ):
         """
         初始化CampusLogin对象并交换密钥
@@ -192,12 +192,13 @@ class CampusLogin:
             'netWork': "wifi",
             'qudao': "guanwang",
             'requestMethod': "cam_iface46/registerUsersByTelAndLoginNew.action",
-            'shebeixinghao': "iPadPro",
+            'shebeixinghao': self.login_info['shebeixinghao'],
             'sms': sms,
             'systemType': self.login_info['systemType'],
             'telephoneInfo': self.login_info['telephoneInfo'],
             'telephoneModel': self.login_info['telephoneModel'],
             'mobile': self.login_info['phoneNum'],
+            'type': '2',
             'wanxiaoVersion': self.login_info['wanxiaoVersion']
         }
         upload_args = {

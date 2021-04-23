@@ -5,7 +5,7 @@
 @author：ReaJason
 @email_addr：reajason@163.com
 @blog_website：https://reajason.top
-@last_modify：2021/03/15
+@last_modify：2021/04/24
 """
 import time
 import requests
@@ -46,6 +46,10 @@ def healthy2_check_in(token, custom_id, post_dict):
     :param post_dict: 健康打卡数据
     :return:
     """
+    if not post_dict.get("whereabouts"):
+        errmsg = f"完美校园第二类健康打卡方式错误，请选第一类健康打卡"
+        log.warning(errmsg)
+        return {'status': 0, 'errmsg': errmsg}
     check_json = {
         "userId": post_dict["userId"],
         "name": post_dict["name"],
@@ -98,33 +102,19 @@ def healthy2_check_in(token, custom_id, post_dict):
             headers=headers,
             data=check_json,
         ).json()
-        if res["code"] == 0:
-            log.info(res)
-            return dict(
-                status=1,
-                res=res,
-                post_dict={
-                    'name': post_dict["name"],
-                    "updatainfo_detail": post_dict,
-                    'checkbox': [{'description': key, 'value': value} for key, value in check_json.items()]
-                },
-                check_json=check_json,
-                type="healthy2",
-            )
-        else:
-            log.warning(res)
-            return dict(
-                status=1,
-                res=res,
-                post_dict={
-                    'name': post_dict["name"],
-                    "updatainfo_detail": post_dict,
-                    'checkbox': [{'description': key, 'value': value} for key, value in check_json.items()]
-                },
-                check_json=check_json,
-                type="healthy2",
-            )
+        log.info(res)
+        return {
+            'status': 1,
+            'res': res,
+            'post_dict': {
+                'name': post_dict["name"],
+                "updatainfo_detail": post_dict,
+                'checkbox': [{'description': key, 'value': value} for key, value in check_json.items()]
+            },
+            'check_json': check_json,
+            'type': "healthy2",
+        }
     except:
-        errmsg = f"```打卡请求出错```"
-        log.warning("打卡请求出错，网络不稳定")
-        return dict(status=0, errmsg=errmsg)
+        errmsg = f"完美校园第二类健康打卡打卡请求出错"
+        log.warning(errmsg)
+        return {'status': 0, 'errmsg': errmsg}

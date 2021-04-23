@@ -5,6 +5,7 @@
     "phone": "",  // 完美校园登录账号
     "password": "",  // 完美校园登录密码
     "device_id": "",  // 已验证完美校园登录设备ID，获取方式为下载蓝奏云链接中的 RegisterDeviceID.zip
+    "ykt_score": true,  // 粮票收集，默认开启，打卡完后自动签到收集粮票
     "healthy_checkin": {
       "one_check": {  // 第一类健康打卡
         "enable": false,  // true 为打开，false 为关闭
@@ -82,6 +83,7 @@
     "phone": "",  // 完美校园登录账号
     "password": "",  // 完美校园登录密码
     "device_id": "",  // 已验证完美校园登录设备ID，获取方式为下载蓝奏云链接中的 RegisterDeviceID.zip
+    "ykt_score": true,  // 粮票收集，默认开启，打卡完后自动签到收集粮票
     "healthy_checkin": {
       "one_check": {  // 第一类健康打卡
         "enable": false,  // true 为打开，false 为关闭
