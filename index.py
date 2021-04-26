@@ -23,14 +23,8 @@ def get_token(username, password, device_id):
     if login_dict["status"]:
         log.info(f"{username[:4]}，{login_dict['msg']}")
         return login_dict["token"]
-    elif login_dict['errmsg'] == "该手机号未注册完美校园":
-        log.warning(f"{username[:4]}，{login_dict['errmsg']}")
-        return None
-    elif login_dict['errmsg'].startswith("密码错误"):
-        log.warning(f"{username[:4]}，{login_dict['errmsg']}")
-        log.warning("代码是死的，密码错误了就是错误了，赶紧去查看一下是不是输错了!")
-        return None
     else:
+        log.warning(f"{username[:4]}，{login_dict['errmsg']}")
         return None
 
 
@@ -93,6 +87,7 @@ def info_push(push_dict, raw_info):
         else:
             flag.append(0)
             log.warning(push['errmsg'])
+    
     if 1 in flag:
         return True
     return False

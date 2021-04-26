@@ -5,7 +5,7 @@
 @author：ReaJason
 @email_addr：reajason@163.com
 @blog_website：https://reajason.top
-@last_modify：2021/04/24
+@last_modify：2021/04/26
 """
 import requests
 
@@ -94,36 +94,6 @@ def get_talents_token(token):
         return None
 
 
-# TODO 校招实习
-def get_job_list(token):
-    """
-
-    :param token:
-    :return:
-    """
-    talents_token = get_talents_token(token)
-    headers = {
-        "talents_token": talents_token,
-        "content-type": "application/json;charset=UTF-8"
-    }
-    session = requests.session()
-    try:
-        session.post(f"https://api.xiaozhao365.com/jyb/pub/iface/userTalentsToken?token={talents_token}",
-                           headers=headers)
-    except:
-        pass
-    post_json = {"cityCode": 310100, "keyword": "", "jobType": 1, "pageNumber": 1, "pageSize": 20}
-    try:
-        res = session.post("https://api.xiaozhao365.com/jyb/pub/iface/search/getRecommendJobsByEs",
-                           json=post_json, headers=headers).json()
-        if not res['code']:
-            log.info("查看校招实习成功")
-        else:
-            log.warning(f"{res} 查看校招实习失败")
-    except Exception as e:
-        log.warning(f"{e} 查看校招实习失败")
-
-
 def get_class_score(token):
     post_json = {"token": token, "command": "CURRI_SERVER.WEEK_CURRI", "week": ""}
     try:
@@ -210,4 +180,3 @@ def get_all_score(token):
                 get_circle_score(token, circle_dict)
         else:
             break
- 
