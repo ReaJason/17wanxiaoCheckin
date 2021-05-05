@@ -75,6 +75,13 @@
       "pipehub": { //  PipeHub：https://www.pipehub.net/
         "enable": false,
         "key": ""
+      },
+      "wechat_enterprise": { //  企业微信：https://work.weixin.qq.com/
+        "enable": false,
+        "corp_id": "", // 企业 ID
+        "corp_secret":  "", // 自建应用 Secret
+        "agent_id":  "",  // 应用 ID
+        "to_user": ""  // 接收者用户，多用户用|分割，所有用户填写 @all
       }
     }
   },
@@ -153,6 +160,13 @@
       "pipehub": { //  PipeHub：https://www.pipehub.net/
         "enable": false,
         "key": ""
+      },
+      "wechat_enterprise": { //  企业微信：https://work.weixin.qq.com/
+        "enable": false,
+        "corp_id": "", // 企业 ID
+        "corp_secret":  "", // 自建应用 Secret
+        "agent_id":  "",  // 自建应用 ID
+        "to_user": ""  // 接收者用户，多用户用|分割，所有用户填写 @all
       }
     }
   }

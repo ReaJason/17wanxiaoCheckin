@@ -2,6 +2,7 @@ import datetime
 import json
 
 from utils.server_chan import server_push
+from utils.wechat_enterprise import wechat_enterprise_push
 from utils.email_push import email_push
 from utils.qmsg import qmsg_push
 from utils.pipehub import pipe_push
@@ -187,3 +188,17 @@ def wanxiao_pipe_push(callbackCode, check_info_list):
         else:
             push_list.append(check_info['errmsg'])
     return pipe_push(callbackCode, "\n".join(push_list).encode())
+
+
+def wanxiao_wechat_enterprise_push(corp_id, corp_secret, agent_id, to_user, check_info_list):
+    utc8_time = datetime.datetime.utcnow() + datetime.timedelta(hours=8)
+    push_list = [f'打卡时间：\n{utc8_time.strftime("%Y-%m-%d %H:%M:%S")}']
+    for check_info in check_info_list:
+        if check_info["status"]:
+            name = check_info["post_dict"].get("username")
+            if not name:
+                name = check_info["post_dict"]["name"]
+            push_list.append(f"{name}{check_info['type']}：\n{check_info['res']}")
+        else:
+            push_list.append(check_info['errmsg'])
+    return wechat_enterprise_push(corp_id, corp_secret, agent_id, to_user, "\n".join(push_list))
