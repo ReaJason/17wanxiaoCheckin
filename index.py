@@ -1,3 +1,4 @@
+import os
 import time
 
 from api.campus_check import get_id_list_v1, get_id_list_v2, get_customer_type_id, get_campus_check_post, \
@@ -43,67 +44,32 @@ def merge_post_json(dict1, dict2):
                     dict1['checkbox'][dict3[i['propertyname']]]['value'] = i['value']
 
 
-# TODO 需要改写优化的代码
 def info_push(push_dict, raw_info):
-    flag = []
-    if push_dict['wechat']['enable']:
-        push = wanxiao_server_push(
-            push_dict['wechat']['send_key'], raw_info
-        )
-        if push['status']:
-            flag.append(1)
-            log.info(push['msg'])
-        else:
-            flag.append(0)
-            log.warning(push['errmsg'])
-    if push_dict['email']['enable']:
-        push = wanxiao_email_push(
-            push_dict['email']['send_email'], push_dict['email']['send_pwd'],
-            push_dict['email']['receive_email'], push_dict['email']['smtp_address'],
-            push_dict['email']['smtp_port'], raw_info
-        )
-        if push['status']:
-            flag.append(1)
-            log.info(push['msg'])
-        else:
-            flag.append(0)
-            log.warning(push['errmsg'])
-    if push_dict['qmsg']['enable']:
-        push = wanxiao_qmsg_push(
-            push_dict['qmsg']['key'], push_dict['qmsg']['qq_num'],
-            push_dict['qmsg']['type'], raw_info
-        )
-        if push['status']:
-            flag.append(1)
-            log.info(push['msg'])
-        else:
-            flag.append(0)
-            log.warning(push['errmsg'])
+    push_funcs = {
+        "email": wanxiao_email_push,
+        "wechat": wanxiao_server_push,
+        "qmsg": wanxiao_qmsg_push,
+        "pipehub": wanxiao_pipe_push,
+        "wechat_enterprise": wanxiao_wechat_enterprise_push
+    }
     
-    if push_dict['pipehub']['enable']:
-        push = wanxiao_pipe_push(push_dict['pipehub']['key'], raw_info)
-        if push['status']:
-            flag.append(1)
-            log.info(push['msg'])
-        else:
-            flag.append(0)
-            log.warning(push['errmsg'])
+    push_raw_info = {
+        "check_info_list": raw_info
+    }
     
-    if push_dict['wechat_enterprise']['enable']:
-        push = wanxiao_wechat_enterprise_push(
-            push_dict['wechat_enterprise']['corp_id'], push_dict['wechat_enterprise']['corp_secret'],
-            push_dict['wechat_enterprise']['agent_id'], push_dict['wechat_enterprise']['to_user'], raw_info
-        )
-        if push['status']:
-            flag.append(1)
-            log.info(push['msg'])
+    for push_name, push_func in push_funcs.items():
+        enable = push_dict[push_name]["enable"]
+        if not enable:
+            pass
         else:
-            flag.append(0)
-            log.warning(push['errmsg'])
-    
-    if 1 in flag:
-        return True
-    return False
+            del push_dict[push_name]["enable"]
+            push_dict[push_name].update(push_raw_info)
+            params_dict = push_dict[push_name]
+            push_res = push_func(**params_dict)
+            if push_res['status']:
+                log.info(push_res["msg"])
+            else:
+                log.warning(push_res["errmsg"])
 
 
 def check_in(user):
@@ -237,22 +203,15 @@ def main_handler(*args, **kwargs):
         # 单人打卡
         check_dict = check_in(user_config)
         # 单人推送
-        if info_push(user_config['push'], check_dict):
-            pass
-        else:
-            log.info("当前用户并未配置 push 参数，将统一进行推送")
-            raw_info.extend(check_dict)
+        info_push(user_config['push'], check_dict)
+        raw_info.extend(check_dict)
     
     # 统一推送
-    if raw_info:
-        all_push_config = load_config(kwargs['push_config_path'])
-        if info_push(all_push_config, raw_info):
-            pass
-        else:
-            log.info('统一推送未开启，如要开启，请修改 conf/push.json 配置文件')
-    else:
-        log.info('所有打卡数据已推送完毕，无需统一推送')
+    all_push_config = load_config(kwargs['push_config_path'])
+    info_push(all_push_config, raw_info)
 
 
 if __name__ == "__main__":
-    main_handler(user_config_path='./conf/user.json', push_config_path='./conf/push.json')
+    user_config_path = os.path.join(os.path.dirname(__file__), 'conf', 'user.json')
+    push_config_path = os.path.join(os.path.dirname(__file__), 'conf', 'push.json')
+    main_handler(user_config_path=user_config_path, push_config_path=push_config_path)
