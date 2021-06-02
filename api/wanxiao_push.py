@@ -2,12 +2,13 @@ import datetime
 import json
 
 from utils.server_chan import server_push
+from utils.wechat_enterprise import wechat_enterprise_push
 from utils.email_push import email_push
 from utils.qmsg import qmsg_push
 from utils.pipehub import pipe_push
 
 
-def wanxiao_server_push(sckey, check_info_list):
+def wanxiao_server_push(send_key, check_info_list):
     utc8_time = datetime.datetime.utcnow() + datetime.timedelta(hours=8)
     push_list = [f"""
 ------
@@ -58,7 +59,7 @@ def wanxiao_server_push(sckey, check_info_list):
 >期待你给项目的star✨
 """
     )
-    return server_push(sckey, "健康打卡", "\n".join(push_list))
+    return server_push(send_key, "健康打卡", "\n".join(push_list))
 
 
 def wanxiao_email_push(send_email, send_pwd, receive_email, smtp_address, smtp_port, check_info_list):
@@ -154,7 +155,7 @@ def wanxiao_email_push(send_email, send_pwd, receive_email, smtp_address, smtp_p
                       smtp_address=smtp_address, smtp_port=smtp_port)
 
 
-def wanxiao_qmsg_push(key, qq_num, send_type, check_info_list):
+def wanxiao_qmsg_push(key, qq_num, type, check_info_list):
     utc8_time = datetime.datetime.utcnow() + datetime.timedelta(hours=8)
     push_list = [f'@face=74@ {utc8_time.strftime("%Y-%m-%d %H:%M:%S")} @face=74@ ']
     for check_info in check_info_list:
@@ -169,10 +170,10 @@ def wanxiao_qmsg_push(key, qq_num, send_type, check_info_list):
 @face=211@""")
         else:
             push_list.append(check_info['errmsg'])
-    return qmsg_push(key, qq_num, "\n".join(push_list), send_type)
+    return qmsg_push(key, qq_num, "\n".join(push_list), type)
 
 
-def wanxiao_pipe_push(callbackCode, check_info_list):
+def wanxiao_pipe_push(key, check_info_list):
     utc8_time = datetime.datetime.utcnow() + datetime.timedelta(hours=8)
     push_list = [f'打卡时间： {utc8_time.strftime("%Y-%m-%d %H:%M:%S")}']
     for check_info in check_info_list:
@@ -186,4 +187,18 @@ def wanxiao_pipe_push(callbackCode, check_info_list):
 """)
         else:
             push_list.append(check_info['errmsg'])
-    return pipe_push(callbackCode, "\n".join(push_list).encode())
+    return pipe_push(key, "\n".join(push_list).encode())
+
+
+def wanxiao_wechat_enterprise_push(corp_id, corp_secret, agent_id, to_user, check_info_list):
+    utc8_time = datetime.datetime.utcnow() + datetime.timedelta(hours=8)
+    push_list = [f'打卡时间：\n{utc8_time.strftime("%Y-%m-%d %H:%M:%S")}']
+    for check_info in check_info_list:
+        if check_info["status"]:
+            name = check_info["post_dict"].get("username")
+            if not name:
+                name = check_info["post_dict"]["name"]
+            push_list.append(f"{name}{check_info['type']}：\n{check_info['res']}")
+        else:
+            push_list.append(check_info['errmsg'])
+    return wechat_enterprise_push(corp_id, corp_secret, agent_id, to_user, "\n".join(push_list))
