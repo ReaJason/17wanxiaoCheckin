@@ -5,11 +5,20 @@ QQ邮箱推送
 
 import smtplib
 from email.mime.text import MIMEText
+
 # from email.header import Header
 
 
-def email_push(send_email, send_pwd, receive_email, title, text, 
-               text_type="html", smtp_address="smtp.qq.com", smtp_port=465):
+def email_push(
+    send_email,
+    send_pwd,
+    receive_email,
+    title,
+    text,
+    text_type="html",
+    smtp_address="smtp.qq.com",
+    smtp_port=465,
+):
     """
     :param send_email: 发送邮箱的邮箱地址
                        默认为：qq 邮箱，其他邮箱请修改 stmp 地址和端口
@@ -33,4 +42,4 @@ def email_push(send_email, send_pwd, receive_email, title, text,
             server.sendmail(send_email, receive_email, msg.as_string())
             return {"status": 1, "msg": "邮箱推送成功"}
     except Exception as e:
-        return {"status": 0, "errmsg": f'邮箱推送失败：{e}'}
+        return {"status": 0, "errmsg": f"邮箱推送失败：{e}"}
