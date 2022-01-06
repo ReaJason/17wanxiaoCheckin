@@ -42,7 +42,7 @@
 ### 💃用户配置
 
 - 打卡用户配置文件位于：`conf/user.json`
-- 整个 json 文件使用一个 `[]` 列表用来存储打卡用户数据，每一个用户占据了一个 `{}`键值对，初次修改务必填写的数据为：`phone`、`password`、`device_id`（获取方法：[蓝奏云](https://lingsiki.lanzous.com/iQamDmt165i)，下载解压使用）、健康打卡的开关（根据截图判断自己属于哪一类[【1】](https://cdn.jsdelivr.net/gh/ReaJason/17wanxiaoCheckin/Pictures/one.png)、[【2】](https://cdn.jsdelivr.net/gh/ReaJason/17wanxiaoCheckin/Pictures/two.png)），校内打卡开关（有则开），推送设置 `push`。
+- 整个 json 文件使用一个 `[]` 列表用来存储打卡用户数据，每一个用户占据了一个 `{}`键值对，初次修改务必填写的数据为：`phone`、`password`、`device_id`（获取方法：[蓝奏云](https://lingsiki.lanzoui.com/iQamDmt165i)，下载解压使用）、健康打卡的开关（根据截图判断自己属于哪一类[【1】](https://cdn.jsdelivr.net/gh/ReaJason/17wanxiaoCheckin/Pictures/one.png)、[【2】](https://cdn.jsdelivr.net/gh/ReaJason/17wanxiaoCheckin/Pictures/two.png)），校内打卡开关（有则开），推送设置 `push`。
 - 关于 `post_json`，如若打卡推送数据中无错误，则不用管，若有 null，或其他获取不到的情况，则酌情修改即可，和推送是一一对应的。
 - 如果多人打卡，则复制单个用户完整的 `{}`，紧接在上个用户其后即可。
 
@@ -61,7 +61,7 @@
 
 - 云函数 — 函数服务 — 新建云函数
 
-- 自定义创建 — 本地上传 zip 包（17wanxiaoCheckin-SCF v*.*.zip：[蓝奏云](https://lingsiki.lanzous.com/b0ekhmcxe)，密码：2333）
+- 自定义创建 — 本地上传 zip 包（17wanxiaoCheckin-SCF v*.*.zip：[蓝奏云](https://lingsiki.lanzoui.com/b0ekhmcxe)，密码：2333）
 
 - 上传之后往下滑 — 触发器配置 — 自定义创建 — 触发周期：自定义触发 — Cron 表达式：0 0 6,14 * * * * — 完成 — 立即跳转
 
