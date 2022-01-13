@@ -58,7 +58,11 @@ def info_push(push_dict, raw_info):
     }
     
     for push_name, push_func in push_funcs.items():
-        enable = push_dict[push_name]["enable"]
+        # 如果获取不到此推送方式的信息，则跳过此推送方式
+        try:
+            enable = push_dict[push_name]["enable"]
+        except KeyError:
+            continue
         if not enable:
             pass
         else:
@@ -92,9 +96,20 @@ def check_in(user):
         check_dict_list.append({"status": 0, "errmsg": errmsg})
         return check_dict_list
     log.info(f'{user_info["username"][0]}-{user_info["school"]}，获取个人信息成功')
-    
-    healthy1_check_config = user['healthy_checkin']['one_check']
-    healthy2_check_config = user['healthy_checkin']['two_check']
+
+    # 如果获取不到第一、二类打卡的信息，则视为未启用
+    try:
+        healthy1_check_config = user['healthy_checkin']['one_check']
+    except KeyError:
+        healthy1_check_config = {
+            "enable": False
+        }
+    try:
+        healthy2_check_config = user['healthy_checkin']['two_check']
+    except KeyError:
+        healthy2_check_config = {
+            "enable": False
+        }
     if healthy1_check_config['enable']:
         # 第一类健康打卡
         
@@ -126,8 +141,13 @@ def check_in(user):
     else:
         log.info('当前并未配置健康打卡方式，暂不进行打卡操作')
     
-    # 校内打卡
-    campus_check_config = user['campus_checkin']
+    # 如果获取不到校内打卡的信息，则视为未启用
+    try:
+        campus_check_config = user['campus_checkin']
+    except KeyError:
+        campus_check_config = {
+            "enable": False
+        }
     if not campus_check_config['enable']:
         log.info('当前并未开启校内打卡，暂不进行打卡操作')
     else:
