@@ -2,14 +2,15 @@
 [
   {
     "welcome": "用户一，这是一条欢迎语，每次打卡前会打印这句话，用来标记当前打卡用户，如：正在为 *** 打卡......",
-    "phone": "",  // 完美校园登录账号
-    "password": "",  // 完美校园登录密码
-    "device_id": "",  // 已验证完美校园登录设备ID，获取方式为下载蓝奏云链接中的 RegisterDeviceID.zip
-    "ykt_score": true,  // 粮票收集，默认开启，打卡完后自动签到收集粮票
-    "healthy_checkin": {
+    "phone": "",  // 完美校园登录账号，必填
+    "password": "",  // 完美校园登录密码，必填
+    "device_id": "",  // 已验证完美校园登录设备ID，获取方式为下载蓝奏云链接中的 RegisterDeviceID.zip，必填
+    "ykt_score": false,  // 粮票收集，默认关闭，打卡完后自动签到收集粮票
+    "healthy_checkin": { // 必选一个打卡方式
       "one_check": {  // 第一类健康打卡
         "enable": false,  // true 为打开，false 为关闭
-        // 以下为数据修改，如果数据获取出现问题，请抓包修改对应项
+        "templateid": "pneumonia", // 默认为学生打卡模板，pneumoniaTe 为教师打卡模板
+        // 初次填写配置文件无需写， 以下为数据修改，如果数据获取出现问题，请抓包修改对应项
         "post_json": {
           "areaStr": "",
           "deptStr": "",
@@ -22,7 +23,7 @@
       },
       "two_check": {  // 第二类健康打卡
         "enable": false,  // true 为打开，false 为关闭
-        // 以下为数据修改，如果数据获取出现问题，请抓包修改或添加
+        // 初次填写配置文件无需写，以下为数据修改，如果数据获取出现问题，请抓包修改或添加
         "post_json":{
           "address": "",
           "stuNo": "",
@@ -32,9 +33,9 @@
         }
       }
     },
-    "campus_checkin": {  // 校内打卡
+    "campus_checkin": {  // 校内打卡，没有就不用管
       "enable": false,  // true 为打开，false 为关闭
-      "post_json": {  // 以下为数据修改，如果数据获取出现问题，请抓包修改对应项
+      "post_json": {  // 初次填写配置文件无需写，以下为数据修改，如果数据获取出现问题，请抓包修改对应项
           "areaStr": "",
           "deptStr": "",
           "deptid": "",
@@ -49,11 +50,11 @@
             {
               "propertyname": "symptom",
               "value": "无症状"
-            },
+            }
           ]
         }
     },
-    "push": {  // 单人推送设置，若全部关闭，则使用 push.json 文件的配置，进行统一推送
+    "push": {  // 必选一个，单人推送设置，若全部关闭，则使用 push.json 文件的配置，进行统一推送
       "email": {  //  自定义邮箱推送，使用 qq 邮箱推送，就用 qq 邮箱的 smtp 服务地址和端口
         "enable": false,  // true 为打开，false 为关闭
         "smtp_address": "smtp.qq.com",  // stmp服务地址
@@ -90,10 +91,11 @@
     "phone": "",  // 完美校园登录账号
     "password": "",  // 完美校园登录密码
     "device_id": "",  // 已验证完美校园登录设备ID，获取方式为下载蓝奏云链接中的 RegisterDeviceID.zip
-    "ykt_score": true,  // 粮票收集，默认开启，打卡完后自动签到收集粮票
+    "ykt_score": false,  // 粮票收集，默认关闭，打卡完后自动签到收集粮票
     "healthy_checkin": {
       "one_check": {  // 第一类健康打卡
         "enable": false,  // true 为打开，false 为关闭
+        "templateid": "pneumonia", // 默认为学生打卡模板，pneumoniaTe 为教师打卡模板
         // 以下为数据修改，如果数据获取出现问题，请抓包修改对应项
         "post_json": {
           "areaStr": "",

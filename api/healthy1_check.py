@@ -13,7 +13,7 @@ import requests
 from setting import log
 
 
-def get_healthy1_check_post_json(token):
+def get_healthy1_check_post_json(token, templateid):
     """
     获取打卡数据
     :param token:
@@ -21,7 +21,7 @@ def get_healthy1_check_post_json(token):
     """
     healthy1_check_post_json = {
         "businessType": "epmpics",
-        "jsonData": {"templateid": "pneumonia", "token": token},
+        "jsonData": {"templateid": templateid, "token": token},
         "method": "userComeApp",
     }
     for _ in range(3):

@@ -58,7 +58,7 @@ def info_push(push_dict, raw_info):
     }
     
     for push_name, push_func in push_funcs.items():
-        enable = push_dict[push_name]["enable"]
+        enable = push_dict.get(push_name, {}).get("enable")
         if not enable:
             pass
         else:
@@ -79,7 +79,7 @@ def check_in(user):
     token = get_token(user['phone'], user['password'], user['device_id'])
     
     if not token:
-        errmsg = f"{user['phone'][:4]}，获取token失败，打卡失败"
+        errmsg = f"{user['phone'][:4]}，获取token失败，打卡失败，"
         log.warning(errmsg)
         check_dict_list.append({"status": 0, "errmsg": errmsg})
         return check_dict_list
@@ -93,20 +93,20 @@ def check_in(user):
         return check_dict_list
     log.info(f'{user_info["username"][0]}-{user_info["school"]}，获取个人信息成功')
     
-    healthy1_check_config = user['healthy_checkin']['one_check']
-    healthy2_check_config = user['healthy_checkin']['two_check']
-    if healthy1_check_config['enable']:
+    healthy1_check_config = user.get('healthy_checkin', {}).get('one_check')
+    healthy2_check_config = user.get('healthy_checkin', {}).get('two_check')
+    if healthy1_check_config.get('enable'):
         # 第一类健康打卡
         
         # 获取第一类健康打卡的参数
-        post_dict = get_healthy1_check_post_json(token)
+        post_dict = get_healthy1_check_post_json(token, healthy1_check_config.get('templateid', "pneumonia"))
         
         # 合并配置文件的打卡信息
-        merge_post_json(post_dict, healthy1_check_config['post_json'])
+        merge_post_json(post_dict, healthy1_check_config.get('post_json', {}))
         
         healthy1_check_dict = healthy1_check_in(token, user['phone'], post_dict)
         check_dict_list.append(healthy1_check_dict)
-    elif healthy2_check_config['enable']:
+    elif healthy2_check_config.get('enable'):
         # 第二类健康打卡
         
         # 获取第二类健康打卡参数
@@ -127,8 +127,8 @@ def check_in(user):
         log.info('当前并未配置健康打卡方式，暂不进行打卡操作')
     
     # 校内打卡
-    campus_check_config = user['campus_checkin']
-    if not campus_check_config['enable']:
+    campus_check_config = user.get('campus_checkin', {})
+    if not campus_check_config.get('enable'):
         log.info('当前并未开启校内打卡，暂不进行打卡操作')
     else:
         # 获取校内打卡ID
@@ -161,7 +161,7 @@ def check_in(user):
             log.info("-" * 40)
     
     # 粮票收集
-    if user['ykt_score']:
+    if user.get('ykt_score'):
         ykt_check_in(token)
         get_all_score(token)
         task_list = get_task_list(token)
@@ -194,11 +194,13 @@ def main_handler(*args, **kwargs):
     raw_info = []
     
     # 加载用户配置文件
-    user_config_dict = load_config(kwargs['user_config_path'])
+    user_config_path = kwargs['user_config_path'] if kwargs.get('user_config_path') else './conf/user.json'
+    push_config_path = kwargs['push_config_path'] if kwargs.get('push_config_path') else './conf/push.json'
+    user_config_dict = load_config(user_config_path)
     for user_config in user_config_dict:
         if not user_config['phone']:
             continue
-        log.info(user_config['welcome'])
+        log.info(user_config.get('welcome'))
         
         # 单人打卡
         check_dict = check_in(user_config)
@@ -207,7 +209,7 @@ def main_handler(*args, **kwargs):
         raw_info.extend(check_dict)
     
     # 统一推送
-    all_push_config = load_config(kwargs['push_config_path'])
+    all_push_config = load_config(push_config_path)
     info_push(all_push_config, raw_info)
 
 

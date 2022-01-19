@@ -82,8 +82,7 @@ def wanxiao_email_push(send_email, send_pwd, receive_email, smtp_address, smtp_p
 {json.dumps(check['post_dict']['updatainfo_detail'], sort_keys=True, indent=4, ensure_ascii=False)}
 </code></pre>
 </details>
-<details>
-<summary style="font-family: 'Microsoft YaHei UI',serif; color: lightskyblue;" >>>>打卡信息数据表格<<<</summary>
+<span style="font-family: 'Microsoft YaHei UI',serif; color: lightskyblue;" >>>>打卡信息数据表格<<<</span>
 <table id="customers">
 <tr>
 <th>Text</th>
@@ -107,7 +106,7 @@ def wanxiao_email_push(send_email, send_pwd, receive_email, smtp_address, smtp_p
                                          )
             mail_msg_list.append(
                 f"""
-</table></details>"""
+</table>"""
             )
         else:
             mail_msg_list.append(
