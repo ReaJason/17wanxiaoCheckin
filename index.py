@@ -7,7 +7,7 @@ from api.healthy1_check import get_healthy1_check_post_json, healthy1_check_in
 from api.healthy2_check import get_healthy2_check_posh_json, healthy2_check_in
 from api.user_info import get_user_info
 from api.wanxiao_push import wanxiao_qmsg_push, wanxiao_server_push, wanxiao_email_push, wanxiao_pipe_push, \
-    wanxiao_wechat_enterprise_push
+    wanxiao_wechat_enterprise_push, wanxiao_bark_push
 from api.ykt_score import get_score_list, get_active_score, get_task_list, get_article_id, get_all_score, \
     get_article_score, get_class_score, ykt_check_in
 from login import CampusLogin
@@ -50,13 +50,14 @@ def info_push(push_dict, raw_info):
         "wechat": wanxiao_server_push,
         "qmsg": wanxiao_qmsg_push,
         "pipehub": wanxiao_pipe_push,
-        "wechat_enterprise": wanxiao_wechat_enterprise_push
+        "wechat_enterprise": wanxiao_wechat_enterprise_push,
+        "bark": wanxiao_bark_push
     }
-    
+
     push_raw_info = {
         "check_info_list": raw_info
     }
-    
+
     for push_name, push_func in push_funcs.items():
         enable = push_dict.get(push_name, {}).get("enable")
         if not enable:
@@ -74,16 +75,16 @@ def info_push(push_dict, raw_info):
 
 def check_in(user):
     check_dict_list = []
-    
+
     # 登录获取token用于打卡
     token = get_token(user['phone'], user['password'], user['device_id'])
-    
+
     if not token:
         errmsg = f"{user['phone'][:4]}，获取token失败，打卡失败，"
         log.warning(errmsg)
         check_dict_list.append({"status": 0, "errmsg": errmsg})
         return check_dict_list
-    
+
     # 获取个人信息
     user_info = get_user_info(token)
     if not user_info:
@@ -92,26 +93,26 @@ def check_in(user):
         check_dict_list.append({"status": 0, "errmsg": errmsg})
         return check_dict_list
     log.info(f'{user_info["username"][0]}-{user_info["school"]}，获取个人信息成功')
-    
+
     healthy1_check_config = user.get('healthy_checkin', {}).get('one_check')
     healthy2_check_config = user.get('healthy_checkin', {}).get('two_check')
     if healthy1_check_config.get('enable'):
         # 第一类健康打卡
-        
+
         # 获取第一类健康打卡的参数
         post_dict = get_healthy1_check_post_json(token, healthy1_check_config.get('templateid', "pneumonia"))
-        
+
         # 合并配置文件的打卡信息
         merge_post_json(post_dict, healthy1_check_config.get('post_json', {}))
-        
+
         healthy1_check_dict = healthy1_check_in(token, user['phone'], post_dict)
         check_dict_list.append(healthy1_check_dict)
     elif healthy2_check_config.get('enable'):
         # 第二类健康打卡
-        
+
         # 获取第二类健康打卡参数
         post_dict = get_healthy2_check_posh_json(token)
-        
+
         # 合并配置文件的打卡信息
         if not healthy2_check_config['post_json']['latitude'] and not healthy2_check_config['post_json']['longitude']:
             post_dict['latitude'] = ""
@@ -121,11 +122,11 @@ def check_in(user):
             if j:
                 post_dict[i] = j
         healthy2_check_dict = healthy2_check_in(token, user_info["customerId"], post_dict)
-        
+
         check_dict_list.append(healthy2_check_dict)
     else:
         log.info('当前并未配置健康打卡方式，暂不进行打卡操作')
-    
+
     # 校内打卡
     campus_check_config = user.get('campus_checkin', {})
     if not campus_check_config.get('enable'):
@@ -137,14 +138,14 @@ def check_in(user):
             id_list = get_id_list_v2(token, custom_type_id)
         else:
             id_list = get_id_list_v1(token)
-        
+
         if not id_list:
             log.warning('当前未获取到校内打卡ID，请尝试重新运行，如仍未获取到，请反馈')
             return check_dict_list
         for index, i in enumerate(id_list):
             start_end = f'{i["templateid"]} ({i.get("startTime", "")}-{i.get("endTime", "")})'
             log.info(f"{start_end:-^40}")
-            
+
             # 获取校内打卡参数
             campus_dict = get_campus_check_post(
                 template_id=i['templateid'],
@@ -154,12 +155,12 @@ def check_in(user):
             )
             # 合并配置文件的打卡信息
             merge_post_json(campus_dict, campus_check_config['post_json'])
-            
+
             # 校内打卡
             campus_check_dict = campus_check_in(user['phone'], token, campus_dict, i['id'])
             check_dict_list.append(campus_check_dict)
             log.info("-" * 40)
-    
+
     # 粮票收集
     if user.get('ykt_score'):
         ykt_check_in(token)
@@ -182,17 +183,17 @@ def check_in(user):
                     log.info("查看课表任务已完成")
         # 获取活跃奖励
         get_active_score(token, get_score_list(token)['active'][0])
-        
+
         # 获取其他奖励
         get_all_score(token)
-        
+
     return check_dict_list
 
 
 def main_handler(*args, **kwargs):
     # 推送数据
     raw_info = []
-    
+
     # 加载用户配置文件
     user_config_path = kwargs['user_config_path'] if kwargs.get('user_config_path') else './conf/user.json'
     push_config_path = kwargs['push_config_path'] if kwargs.get('push_config_path') else './conf/push.json'
@@ -201,13 +202,13 @@ def main_handler(*args, **kwargs):
         if not user_config['phone']:
             continue
         log.info(user_config.get('welcome'))
-        
+
         # 单人打卡
         check_dict = check_in(user_config)
         # 单人推送
         info_push(user_config['push'], check_dict)
         raw_info.extend(check_dict)
-    
+
     # 统一推送
     all_push_config = load_config(push_config_path)
     info_push(all_push_config, raw_info)
