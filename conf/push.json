@@ -27,5 +27,10 @@
     "corp_secret":  "", // 自建应用 Secret
     "agent_id":  "",  // 自建应用 ID
     "to_user": ""  // 接收者用户，多用户用|分割，所有用户填写 @all
+  },
+  "bark": { // Bark: https://github.com/Finb/Bark
+    "enable": false,
+    "device_key": "", // Bark device_key
+    "group": "健康打卡" // 推送消息分组
   }
 }
