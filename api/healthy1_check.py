@@ -10,7 +10,6 @@
 import time
 import json
 import requests
-from setting import log
 
 
 def get_healthy1_check_post_json(token, templateid):
@@ -24,59 +23,61 @@ def get_healthy1_check_post_json(token, templateid):
         "jsonData": {"templateid": templateid, "token": token},
         "method": "userComeApp",
     }
-    for _ in range(3):
-        try:
-            res = requests.post(
-                url="https://reportedh5.17wanxiao.com/sass/api/epmpics",
-                json=healthy1_check_post_json,
-                timeout=10,
-            ).json()
-        except:
-            log.warning("完美校园第一类健康打卡post参数获取失败，正在重试...")
-            time.sleep(1)
-            continue
-        if res["code"] != "10000":
-            """
-            {'msg': '业务异常', 'code': '10007', 'data': '无法找到该机构的投票模板数据!'}
-            """
-            log.warning(f'完美校园第一类健康打卡post参数获取失败{res}')
-            return None
-        data = json.loads(res["data"])
-        post_dict = {
-            "areaStr": data['areaStr'],
-            "ver": data["ver"],
-            "deptStr": data['deptStr'],
-            "deptid": data['deptStr']['deptid'] if data['deptStr'] else None,
-            "customerid": data['customerid'],
-            "userid": data['userid'],
-            "username": data['username'],
-            "stuNo": data['stuNo'],
-            "phonenum": data["phonenum"],
-            "templateid": data["templateid"],
-            "updatainfo": [
-                {"propertyname": i["propertyname"], "value": i["value"]}
-                for i in data["cusTemplateRelations"]
-            ],
-            "updatainfo_detail": [
-                {
-                    "propertyname": i["propertyname"],
-                    "checkValues": i["checkValues"],
-                    "description": i["decription"],
-                    "value": i["value"],
-                }
-                for i in data["cusTemplateRelations"]
-            ],
-            "checkbox": [
-                {"description": i["decription"], "value": i["value"], "propertyname": i["propertyname"]}
-                for i in data["cusTemplateRelations"]
-            ],
-        }
-        log.info("完美校园第一类健康打卡post参数获取成功")
-        return post_dict
-    return None
+    try:
+        res = requests.post(
+            url="https://reportedh5.17wanxiao.com/sass/api/epmpics",
+            json=healthy1_check_post_json,
+        )
+        res.raise_for_status()
+        res = res.json()
+    except Exception as e:
+        # log.warning("完美校园第一类健康打卡post参数获取失败，正在重试...")
+        # time.sleep(3)
+        # continue
+        raise Exception(*('打卡参数获取失败',)+e.args)
+    if "会话失效" in res['data']:
+        return 1
+    if res["code"] != "10000":
+        """
+        {'msg': '业务异常', 'code': '10007', 'data': '无法找到该机构的投票模板数据!'}
+        """
+        raise Exception(
+            '打卡参数获取失败', 'code: '+res['code'], 'msg: '+res['msg'], 'data: '+res['data'])
+    data = json.loads(res["data"])
+    post_dict = {
+        "areaStr": data['areaStr'],
+        "ver": data["ver"],
+        "deptStr": data['deptStr'],
+        "deptid": data['deptStr']['deptid'] if data['deptStr'] else None,
+        "customerid": data['customerid'],
+        "userid": data['userid'],
+        "username": data['username'],
+        "stuNo": data['stuNo'],
+        "phonenum": data["phonenum"],
+        "templateid": data["templateid"],
+        "updatainfo": [
+            {"propertyname": i["propertyname"], "value": i["value"]}
+            for i in data["cusTemplateRelations"]
+        ],
+        "updatainfo_detail": [
+            {
+                "propertyname": i["propertyname"],
+                "checkValues": i["checkValues"],
+                "description": i["decription"],
+                "value": i["value"],
+            }
+            for i in data["cusTemplateRelations"]
+        ],
+        "checkbox": [
+            {"description": i["decription"], "value": i["value"],
+                "propertyname": i["propertyname"]}
+            for i in data["cusTemplateRelations"]
+        ],
+    }
+    return post_dict
 
 
-def healthy1_check_in(token, phone, post_dict):
+def healthy1_check_in(user, post_dict):
     """
     第一类健康打卡
     :param phone: 手机号
@@ -97,44 +98,42 @@ def healthy1_check_in(token, phone, post_dict):
             "templateid": post_dict["templateid"],
             "stuNo": post_dict["stuNo"],
             "username": post_dict["username"],
-            "phonenum": phone,
+            "phonenum": user['username'],
             "userid": post_dict["userid"],
             "updatainfo": post_dict["updatainfo"],
             "gpsType": 1,
             "ver": post_dict["ver"],
-            "token": token,
+            "token": user['token'],
         },
     }
-    for _ in range(3):
-        try:
-            res = requests.post(
-                "https://reportedh5.17wanxiao.com/sass/api/epmpics", json=check_json
-            ).json()
-            if res['code'] == '10000':
-                log.info(res)
-                return {
-                    "status": 1,
-                    "res": res,
-                    "post_dict": post_dict,
-                    "check_json": check_json,
-                    "type": "healthy1",
-                }
-            elif res['data'] == "areaStr can not be null":
-                log.warning('当前用户无法获取第一类健康打卡地址信息，请前往配置 user.json 文件，one_check 下的 areaStr 设置地址信息')
-            elif "频繁" in res['data']:
-                log.info(res)
-                return {
-                    "status": 1,
-                    "res": res,
-                    "post_dict": post_dict,
-                    "check_json": check_json,
-                    "type": "healthy1",
-                }
-            else:
-                log.warning(res)
-                return {"status": 0, "errmsg": f"{post_dict['username']}: {res}"}
-        except:
-            errmsg = f"```打卡请求出错```"
-            log.warning("健康打卡请求出错")
-            return {"status": 0, "errmsg": errmsg}
-    return {"status": 0, "errmsg": "健康打卡请求出错"}
+    try:
+        res = requests.post(
+            "https://reportedh5.17wanxiao.com/sass/api/epmpics", json=check_json
+        )
+        res.raise_for_status()
+        res = res.json()
+        if res['code'] == '10000':
+            #  log.info(res)
+            return {
+                "status": 1,
+                "res": res,
+                "post_dict": post_dict,
+                "check_json": check_json,
+                "type": "healthy1",
+            }
+        elif res['data'] == "areaStr can not be null":
+            raise Exception('当前用户无法获取第一类健康打卡地址信息')
+        elif "频繁" in res['data']:
+            return {
+                "status": 1,
+                "res": res,
+                "post_dict": post_dict,
+                "check_json": check_json,
+                "type": "healthy1",
+            }
+        elif "token" in res['data']:
+            return {"status": 2, }
+        else:
+            raise Exception(res)
+    except Exception as e:
+        raise Exception(*('健康打卡请求出错',)+e.args)
