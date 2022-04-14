@@ -1,0 +1,15 @@
+// 此处填写用户的一些设备信息
+{
+    "_username": {
+        "userAgent": "Dalvik/2.1.0 (Linux; U; Android 11; Redmi K20 Pro Premium Edition Build/RKQ1.200826.002)",
+        "wanxiaoVersion": 10536101,
+        "shebeixinghao": "raphael",
+        "systemType": "android",
+        "telephoneInfo": "11",
+        "telephoneModel": "Redmi K20 Pro Premium Edition",
+        "qudao": "guanwang",
+        "yunyingshang": "07",
+        "netWork": "wifi",
+        "appCode": "M002"
+    }
+}

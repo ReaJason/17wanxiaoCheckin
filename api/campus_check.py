@@ -7,15 +7,14 @@
 @blog_website：https://reajason.top
 @last_modify：2021/03/15
 """
+import logging
 import time
 import json
 
 import requests
 
-from setting import log
 
-
-def get_id_list_v2(token, custom_type_id):
+def get_id_list_v2(user, custom_type_id):
     """
     通过校内模板id获取校内打卡具体的每个时间段id
     :param token: 用户令牌
@@ -26,7 +25,7 @@ def get_id_list_v2(token, custom_type_id):
         "customerAppTypeId": custom_type_id,
         "longitude": "",
         "latitude": "",
-        "token": token,
+        "token": user['token'],
     }
     try:
         res = requests.post(
@@ -37,13 +36,13 @@ def get_id_list_v2(token, custom_type_id):
         return None
 
 
-def get_id_list_v1(token):
+def get_id_list_v1(user):
     """
     通过校内模板id获取校内打卡具体的每个时间段id（初版,暂留）
     :param token: 用户令牌
     :return: 返回校内打卡id列表
     """
-    post_data = {"appClassify": "DK", "token": token}
+    post_data = {"appClassify": "DK", "token": user['token']}
     try:
         res = requests.post(
             "https://reportedh5.17wanxiao.com/api/clock/school/childApps",
@@ -58,22 +57,23 @@ def get_id_list_v1(token):
                 key=lambda x: x["id"],
             )
             res_dict = [
-                {"customerAppTypeId": j["id"], "templateid": f"clockSign{i + 1}"}
+                {"customerAppTypeId": j["id"],
+                    "templateid": f"clockSign{i + 1}"}
                 for i, j in enumerate(id_list)
             ]
             return res_dict
         return None
     except:
         return None
-    
-    
-def get_customer_type_id(token):
+
+
+def get_customer_type_id(user):
     """
     通过校内模板id获取校内打卡具体的每个时间段id（初版,暂留）
     :param token: 用户令牌
     :return: 返回校内打卡id列表
     """
-    post_data = {"appClassify": "DK", "token": token}
+    post_data = {"appClassify": "DK", "token": user['token']}
     try:
         res = requests.post(
             "https://reportedh5.17wanxiao.com/api/clock/school/childApps",
@@ -86,7 +86,7 @@ def get_customer_type_id(token):
         return None
 
 
-def get_campus_check_post(template_id, custom_rule_id, stu_num, token):
+def get_campus_check_post(template_id, custom_rule_id, stu_num, token, log):
     """
     获取打卡数据
     :param template_id:
@@ -95,6 +95,7 @@ def get_campus_check_post(template_id, custom_rule_id, stu_num, token):
     :param token:
     :return:
     """
+    # logging.getLogger('main.'+user)
     campus_check_post_json = {
         "businessType": "epmpics",
         "jsonData": {
@@ -148,7 +149,8 @@ def get_campus_check_post(template_id, custom_rule_id, stu_num, token):
                 for i in data["cusTemplateRelations"]
             ],
             "checkbox": [
-                {"description": i["decription"], "value": i["value"], "propertyname": i["propertyname"]}
+                {"description": i["decription"], "value": i["value"],
+                    "propertyname": i["propertyname"]}
                 for i in data["cusTemplateRelations"]
             ],
         }
@@ -157,7 +159,7 @@ def get_campus_check_post(template_id, custom_rule_id, stu_num, token):
     return None
 
 
-def campus_check_in(phone, token, post_dict, custom_rule_id):
+def campus_check_in(phone, token, post_dict, custom_rule_id, log):
     """
     校内打卡
     :param phone: 电话号
@@ -198,9 +200,10 @@ def campus_check_in(phone, token, post_dict, custom_rule_id):
         if res["code"] == "10000":
             log.info(res)
         elif res['data'] == "areaStr can not be null":
-            log.warning("当前用户无法获取校内打卡地址信息，请前往配置文件，campus_checkin 下的 areaStr 设置地址信息")
+            log.warning(
+                "当前用户无法获取校内打卡地址信息，请前往配置文件，campus_checkin 下的 areaStr 设置地址信息")
         elif res['data'] == "请在正确的打卡时间打卡":
-            log.warning( f'当前已不在该打卡时间范围内，{res["data"]}')
+            log.warning(f'当前已不在该打卡时间范围内，{res["data"]}')
         else:
             log.warning(res)
         return {

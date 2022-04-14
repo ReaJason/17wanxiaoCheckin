@@ -1,0 +1,52 @@
+{
+    "_username": {
+        "one_check": { // 第一类健康打卡
+            "full_cover":false, // 完全覆盖，开启后将只提交配置内容，而不是更新原内容
+            "templateid": "pneumonia", // 默认为学生打卡模板，pneumoniaTe 为教师打卡模板
+            // 初次填写配置文件无需写， 以下为数据修改，如果数据获取出现问题，请抓包修改对应项
+            "post_json": {
+                "areaStr": "",
+                "deptStr": "",
+                "deptid": "",
+                "stuNo": "",
+                "username": "",
+                "userid": "",
+                "updatainfo": []
+            }
+        },
+        "two_check": { // 第二类健康打卡
+            "full_cover":false,
+
+            // 初次填写配置文件无需写，以下为数据修改，如果数据获取出现问题，请抓包修改或添加
+            "post_json": {
+                "address": "",
+                "stuNo": "",
+                //  百度坐标拾取：http://api.map.baidu.com/lbsapi/getpoint/index.html，可用来获取下面两个值
+                "longitude": "", // 请对应 address 填写该值，否则老师那边会显示手动签到
+                "latitude": "" // 请对应 address 填写该值，否则老师那边会显示手动签到
+            }
+        },
+        "campus_checkin": { // 校内打卡，没有就不用管
+            "full_cover":false,
+
+            "post_json": { // 初次填写配置文件无需写，以下为数据修改，如果数据获取出现问题，请抓包修改对应项
+                "areaStr": "",
+                "deptStr": "",
+                "deptid": "",
+                "stuNo": "",
+                "username": "",
+                "userid": "",
+                "updatainfo": [
+                    {
+                        "propertyname": "temperature",
+                        "value": "36.4"
+                    },
+                    {
+                        "propertyname": "symptom",
+                        "value": "无症状"
+                    }
+                ]
+            }
+        }
+    }
+}

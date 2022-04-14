@@ -7,42 +7,41 @@
 @blog_website：https://reajason.top
 @last_modify：2021/03/15
 """
+import logging
 import time
 import json
 import requests
 
+from utils.Errors import *
 
-def get_healthy1_check_post_json(token, templateid):
+
+def get_healthy1_check_post_json(user, templateid):
     """
     获取打卡数据
     :param token:
     :return:
     """
+    log = logging.getLogger('main.'+user['username'])
     healthy1_check_post_json = {
         "businessType": "epmpics",
-        "jsonData": {"templateid": templateid, "token": token},
+        "jsonData": {"templateid": templateid, "token": user['token']},
         "method": "userComeApp",
     }
-    try:
-        res = requests.post(
-            url="https://reportedh5.17wanxiao.com/sass/api/epmpics",
-            json=healthy1_check_post_json,
+    res = requests.post(
+        url="https://reportedh5.17wanxiao.com/sass/api/epmpics",
+        json=healthy1_check_post_json,
+        timeout=30,
         )
-        res.raise_for_status()
-        res = res.json()
-    except Exception as e:
-        # log.warning("完美校园第一类健康打卡post参数获取失败，正在重试...")
-        # time.sleep(3)
-        # continue
-        raise Exception(*('打卡参数获取失败',)+e.args)
-    if "会话失效" in res['data']:
-        return 1
-    if res["code"] != "10000":
+    res.raise_for_status()
+    res=res.json()
+    if '会话失效'in res['data']:
+        raise NotLoginError
+    elif res["code"] != "10000":
         """
         {'msg': '业务异常', 'code': '10007', 'data': '无法找到该机构的投票模板数据!'}
         """
-        raise Exception(
-            '打卡参数获取失败', 'code: '+res['code'], 'msg: '+res['msg'], 'data: '+res['data'])
+        log.warning(f'完美校园第一类健康打卡post参数获取失败{res}')
+        raise Exception(res)
     data = json.loads(res["data"])
     post_dict = {
         "areaStr": data['areaStr'],
@@ -74,6 +73,7 @@ def get_healthy1_check_post_json(token, templateid):
             for i in data["cusTemplateRelations"]
         ],
     }
+    log.info("完美校园第一类健康打卡post参数获取成功")
     return post_dict
 
 
@@ -85,6 +85,7 @@ def healthy1_check_in(user, post_dict):
     :param post_dict: 打卡数据
     :return:
     """
+    log = logging.getLogger('main.'+user['username'])
     check_json = {
         "businessType": "epmpics",
         "method": "submitUpInfo",
@@ -106,34 +107,15 @@ def healthy1_check_in(user, post_dict):
             "token": user['token'],
         },
     }
-    try:
-        res = requests.post(
-            "https://reportedh5.17wanxiao.com/sass/api/epmpics", json=check_json
-        )
-        res.raise_for_status()
-        res = res.json()
-        if res['code'] == '10000':
-            #  log.info(res)
-            return {
-                "status": 1,
-                "res": res,
-                "post_dict": post_dict,
-                "check_json": check_json,
-                "type": "healthy1",
-            }
-        elif res['data'] == "areaStr can not be null":
-            raise Exception('当前用户无法获取第一类健康打卡地址信息')
-        elif "频繁" in res['data']:
-            return {
-                "status": 1,
-                "res": res,
-                "post_dict": post_dict,
-                "check_json": check_json,
-                "type": "healthy1",
-            }
-        elif "token" in res['data']:
-            return {"status": 2, }
-        else:
-            raise Exception(res)
-    except Exception as e:
-        raise Exception(*('健康打卡请求出错',)+e.args)
+    res = requests.post(
+        "https://reportedh5.17wanxiao.com/sass/api/epmpics", json=check_json
+    )
+    res.raise_for_status()
+    res = res.json()
+    if res['code'] == '10000' or "频繁" in res['data']:
+        log.info('打卡成功')
+    elif res['data'] == "areaStr can not be null":
+        log.error(
+            '当前用户无法获取第一类健康打卡地址信息，请前往配置 user.json 文件，one_check 下的 areaStr 设置地址信息')
+    else:
+        log.error(res)

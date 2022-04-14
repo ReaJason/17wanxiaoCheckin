@@ -10,10 +10,8 @@
 import time
 import requests
 
-from setting import log
 
-
-def get_healthy2_check_posh_json(token):
+def get_healthy2_check_posh_json(token,log):
     """
     获取第二类健康打卡的打卡数据
     :param token: 用户令牌
@@ -38,7 +36,7 @@ def get_healthy2_check_posh_json(token):
     return None
 
 
-def healthy2_check_in(token, custom_id, post_dict):
+def healthy2_check_in(token, custom_id, post_dict, log):
     """
     第二类健康打卡
     :param token: 用户令牌

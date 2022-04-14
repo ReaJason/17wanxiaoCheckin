@@ -21,7 +21,7 @@
 
 &emsp;&emsp;本项目使用了 `requests`、`json5`、`pycryptodome` 第三方库，2.0 版本迎来项目重构，打卡数据错误修改方法，不再是以前的修改代码（不懂代码容易改错或无法下手），而是通过直接修改配置文件即可，**本脚本使用虚拟 id 来登录，如果使用了本脚本就不要再用手机登录 app 了，如果一定要用 app 请不要使用当前脚本**。
 
-&emsp;&emsp;由于完美校园就设备做了验证，只允许一个设备登录，获取本机的 device_id 可通过抓包实现来实现与脚本共存（完美校园 app 主界面 -> 全部应用 ——> 打开校园卡时抓包【 http://server.17wanxiao.com/YKT_Interface/xyk 】【请求体中 method=WX_BASE_INFO 】）
+&emsp;&emsp;由于完美校园就设备做了验证，只允许一个设备登录，获取本机的 device_id 可通过 [xp hook](https://reajason.top/2021/04/18/17wanxiaohookgetdeviceid/) 或抓包实现来实现与脚本共存（完美校园 app 主界面 -> 全部应用 ——> 打开校园卡时抓包【 http://server.17wanxiao.com/YKT_Interface/xyk 】【请求体中 method=WX_BASE_INFO 】）
 
 
 
@@ -29,7 +29,10 @@
 
 * [x] 完美校园模拟登录获取 token
 * [x] 自动获取上次提交的打卡数据，也可通过配置文件修改
-* [x] 通过验证码登陆验证新设备
+* [x] 支持健康打卡（学生打卡、教师打卡）和校内打卡
+* [x] 支持多人打卡配置，可单人自定义推送，也可统一推送
+* [x] 支持粮票签到收集，自动完成查看课表和校园头条任务
+* [x] 支持 qq 邮箱、Qmsg、Server 酱、PipeHub 推送打卡消息
 
 
 ## 🎨配置文件
@@ -37,71 +40,33 @@
 ### 💃用户配置
 
 - 打卡用户配置文件位于：`conf/user.json`
-- 整个 json 文件使用一个 `[]` 列表用来存储打卡用户数据，每一个用户占据了一个 `{}`键值对，初次修改务必填写的数据为：**phone**
-  `device_id`为空则自动生成随机id并使用验证码登陆，`password`为空则使用验证码登陆
-- 自动检测token是否过期，登陆后会更新配置文件中的token，也可以自己抓取完美校园的token实现共同登陆
-- **只保留了第一类打卡功能！通知推送等功能均被删除！**
-- 可以在`conf/user_plus.json`配置更多
-- 为Windows的后台运行添加任务栏通知
-- 不建议使用云函数部署，使用windows自动启动
+- 整个 json 文件使用一个 `[]` 列表用来存储打卡用户数据，每一个用户占据了一个 `{}`键值对，初次修改务必填写的数据为：**phone**、**password**、**device_id**（获取方法：[蓝奏云](https://lingsiki.lanzoui.com/iQamDmt165i)，下载解压使用）、**健康打卡的开关**（根据截图判断自己属于哪一类（不一定和我截图一模一样，好看就选 1）[【1】](https://cdn.jsdelivr.net/gh/ReaJason/17wanxiaoCheckin/Pictures/one.png)、[【2】](https://cdn.jsdelivr.net/gh/ReaJason/17wanxiaoCheckin/Pictures/two.png)），校内打卡开关（有则开），推送设置 **push**（推荐使用 qq 邮箱推送）。
+- 关于 `post_json`，如若打卡推送数据中无错误，则不用管，若有 null，或其他获取不到的情况，则酌情修改即可，和推送是一一对应的。
+- 如果多人打卡，则复制单个用户完整的 `{}`，紧接在上个用户其后即可。
 
 ```js
-// user.json
-[
-    {
-        "username": "",  // 必须，登陆的用户名
-        "password": "",  // 登陆密码，为空使用手机验证码登陆
-        "device_id": "", // 设备id，为空则生成随机值并使用验证码登陆
-        "token": ""      // token，自动生成，可以抓取手机app的token实现共存
-    },
-    {// 另一个用户，可以复制多份实现批量打卡
-        "username": "",
-        "password": "",
-        "device_id": "",
-        "token": ""
-    }
-]
-```
-
-```js
-// user_plus.json
+//  萌新不建议精简配置，出现报错还需要加上必要的配置，以下为个人最简配置示例，请确定自己的打卡方式，删掉不需要的即可
 {
-    // 这个配置不是必须的
-    // 这里的任何条目都可以删除，删除则不传递/更新对应打卡信息
-    "_username": { // 使用用户名作为键值
-        "device_args": { // 登陆时传递的设备参数，不填则不传
-            "wanxiaoVersion": 10536101,
-            "shebeixinghao": "raphael",
-            "systemType": "android",
-            "telephoneInfo": "11",
-            "telephoneModel": "Redmi K20 Pro Premium Edition",
-            "qudao": "guanwang",
-            "yunyingshang": "07",
-            "netWork": "wifi",
-            "appCode": "M002"
-        },
-        "requestHeaders": { // 发起请求时的请求头
-            "userAgent": "Dalvik/2.1.0 (Linux; U; Android 11; Redmi K20 Pro Premium Edition Build/RKQ1.200826.002)"
-        },
-        "postData": { // 自定义的打卡数据
-            "deptStr": "",
-            "deptid": "",
-            "areaStr": "", // 打卡的地址信息
-            "customerid": "",
-            "templateid": "",
-            "stuNo": "",
-            "username": "",
-            "userid": "",
-            "updatainfo": [
-                {
-                    "propertyname": "",
-                    "value": ""
-                },
-                {
-                    "propertyname": "",
-                    "value": ""
-                }
-            ]
+    "welcome": "用户一，这是一条欢迎语，每次打卡前会打印这句话，用来标记当前打卡用户，如：正在为 *** 打卡......",
+    "phone": "123",  // 完美校园登录账号，必填
+    "password": "456",  // 完美校园登录密码，必填
+    "device_id": "789",  // 已验证完美校园登录设备ID，获取方式为下载蓝奏云链接中的 RegisterDeviceID.zip，必填
+    "healthy_checkin": { // 必选一个打卡方式
+        "one_check": {  // 第一类健康打卡
+            "enable": true  // true 为打开，false 为关闭
+        }
+    },
+    "campus_checkin": {  // 校内打卡，没有就不用管
+        "enable": true  // true 为打开，false 为关闭
+    },
+    "push": {  // 必选一个，单人推送设置，若全部关闭，则使用 push.json 文件的配置，进行统一推送
+        "email": {  //  自定义邮箱推送，使用 qq 邮箱推送，就用 qq 邮箱的 smtp 服务地址和端口
+            "enable": true,  // true 为打开，false 为关闭
+            "smtp_address": "smtp.qq.com",  // stmp服务地址
+            "smtp_port": 465,  // stmp服务端口
+            "send_email": "***@qq.com",  // 发送邮箱的邮箱地址
+            "send_pwd": "****",  // 发送邮箱的邮箱授权码
+            "receive_email": "**@qq.com"  // 接收信息的邮箱地址，可自己给自己发
         }
     }
 }
@@ -114,18 +79,7 @@
 
 
 
-## windows开机自动启动
-
-- 配置好环境，直接运行`index.py`一次进行测试
-- 打卡成功不会有任何提示，出现错误则在windows通知栏通知
-- 把代码复制到一个安全的地方，将`index.py`修改后缀为`index.pyw`(python后台执行文件)
-- 右键`index.pyw`，发送到->桌面快捷方式
-- win+R，输入`shell:startup`, 把桌面上多出来的快捷方式丢进去
-- 每次开机都会打一次卡，出错会通过通知栏提醒
-
 ## 💦使用方法（云函数）
-
-**在此版本不建议**
 
 > 详细图文教程请前往：[博客](https://reajason.top/2021/03/19/17wanxiaocheckinscf/)，请所有步骤及常见问题通读一遍再动手
 

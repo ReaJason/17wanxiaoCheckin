@@ -9,10 +9,8 @@
 """
 import requests
 
-from setting import log
 
-
-def get_task_list(token):
+def get_task_list(token,log):
     data = f"token={token}" \
            "&method=makeScoreTask" \
            f"&param=%7B%22token%22%3A%22{token}%22%2C%22qudao%22%3A%220%22%2C%22device%22%3A%221%22%7D"
@@ -28,7 +26,7 @@ def get_task_list(token):
         return None
 
 
-def ykt_check_in(token):
+def ykt_check_in(token,log):
     """
     获取签到粮票
     :param token:
@@ -46,7 +44,7 @@ def ykt_check_in(token):
         log.warning("签到失败")
 
 
-def get_article_id(token):
+def get_article_id(token,log):
     """
     获取文章 id
     :return:
@@ -64,7 +62,7 @@ def get_article_id(token):
         return None
 
 
-def get_article_score(token, article_id):
+def get_article_score(token, article_id,log):
     """
     查看文章
     :param article_id:
@@ -86,7 +84,7 @@ def get_article_score(token, article_id):
         log.warning(f'查看文章失败，{e}')
 
 
-def get_talents_token(token):
+def get_talents_token(token,log):
     try:
         res = requests.get(f"https://api.xiaozhao365.com/operation/pub/iface/userInfo?token={token}").json()
         return res['userInfo']['talents_token']
@@ -94,7 +92,7 @@ def get_talents_token(token):
         return None
 
 
-def get_class_score(token):
+def get_class_score(token,log):
     post_json = {"token": token, "command": "CURRI_SERVER.WEEK_CURRI", "week": ""}
     try:
         res = requests.post("https://course.59wanmei.com/campus-score/curriculum/_iface/server/invokInfo.action",
@@ -107,7 +105,7 @@ def get_class_score(token):
         log.warning(f"{e} 查看课表失败")
 
 
-def get_score_list(token):
+def get_score_list(token,log):
     """
     获取所有的奖励数据
     :param token
@@ -130,7 +128,7 @@ def get_score_list(token):
         return None
 
 
-def get_active_score(token, active_dict):
+def get_active_score(token, active_dict,log):
     """
     获取活动奖励
     """
@@ -151,7 +149,7 @@ def get_active_score(token, active_dict):
         log.warning(f'{e.__class__}:{e}操作失败')
 
 
-def get_circle_score(token, circle_dict):
+def get_circle_score(token, circle_dict,log):
     """
     获取其他奖励
     """
@@ -172,7 +170,7 @@ def get_circle_score(token, circle_dict):
         log.warning(f'{e.__class__}:{e}操作失败')
 
 
-def get_all_score(token):
+def get_all_score(token,log):
     for _ in range(2):
         circle_dict_list = get_score_list(token)['circle']
         if circle_dict_list:

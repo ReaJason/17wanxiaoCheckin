@@ -1,0 +1,64 @@
+// 所有配置文件使用 JSON with Comments 标准格式, 使用 json5 解析
+// 此处是基本配置
+// 使用一次后注释会消失！！！！！！！！
+[
+  {
+    "username": "", // 完美校园登录账号，必填
+    "password": "", // 完美校园登录密码，必填
+    "sms_login": false,
+    "device_id": "", // 已验证完美校园登录设备ID，获取方式为下载蓝奏云链接中的 RegisterDeviceID.zip，必填
+    "token": "", // token
+    "healthy1_checkin": true, // 第一类健康打卡
+    "healthy2_checkin": false, // 第二类健康打卡
+    "campus_checkin": false, // 校内打卡，没有就不用管
+    "ykt_score": false // 粮票收集，打卡完后自动签到收集粮票，现已弃用，开启时请取消注释相关代码
+    // "healthy_checkin": { // 必选一个打卡方式
+    //   "one_check": { // 第一类健康打卡
+    //     "enable": false, // true 为打开，false 为关闭
+    //     "templateid": "pneumonia", // 默认为学生打卡模板，pneumoniaTe 为教师打卡模板
+    //     // 初次填写配置文件无需写， 以下为数据修改，如果数据获取出现问题，请抓包修改对应项
+    //     "post_json": {
+    //       "areaStr": "",
+    //       "deptStr": "",
+    //       "deptid": "",
+    //       "stuNo": "",
+    //       "username": "",
+    //       "userid": "",
+    //       "updatainfo": []
+    //     }
+    //   },
+    //   "two_check": { // 第二类健康打卡
+    //     "enable": false, // true 为打开，false 为关闭
+    //     // 初次填写配置文件无需写，以下为数据修改，如果数据获取出现问题，请抓包修改或添加
+    //     "post_json": {
+    //       "address": "",
+    //       "stuNo": "",
+    //       //  百度坐标拾取：http://api.map.baidu.com/lbsapi/getpoint/index.html，可用来获取下面两个值
+    //       "longitude": "", // 请对应 address 填写该值，否则老师那边会显示手动签到
+    //       "latitude": "" // 请对应 address 填写该值，否则老师那边会显示手动签到
+    //     }
+    //   }
+    // },
+    // "campus_checkin": { // 校内打卡，没有就不用管
+    //   "enable": false, // true 为打开，false 为关闭
+    //   "post_json": { // 初次填写配置文件无需写，以下为数据修改，如果数据获取出现问题，请抓包修改对应项
+    //     "areaStr": "",
+    //     "deptStr": "",
+    //     "deptid": "",
+    //     "stuNo": "",
+    //     "username": "",
+    //     "userid": "",
+    //     "updatainfo": [
+    //       {
+    //         "propertyname": "temperature",
+    //         "value": "36.4"
+    //       },
+    //       {
+    //         "propertyname": "symptom",
+    //         "value": "无症状"
+    //       }
+    //     ]
+    //   }
+    // },
+  }
+]
