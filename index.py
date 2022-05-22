@@ -214,6 +214,15 @@ def main_handler(*args, **kwargs):
     info_push(all_push_config, raw_info)
 
 
+def functiongraph_handler(event, context):
+    '''
+    华为云函数工作流 FunctionGraph 执行入口
+    '''
+    user_config_path: str = 'code/conf/user.json'
+    push_config_path: str = 'code/conf/push.json'
+    main_handler(user_config_path=user_config_path, push_config_path=push_config_path)
+
+
 if __name__ == "__main__":
     user_config_path = os.path.join(os.path.dirname(__file__), 'conf', 'user.json')
     push_config_path = os.path.join(os.path.dirname(__file__), 'conf', 'push.json')
