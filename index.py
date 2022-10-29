@@ -15,6 +15,21 @@ from setting import log
 from utils.config import load_config
 
 
+def retry(retry_num, delay):
+    def wrapper(func):
+        def inner(*args, **kwargs):
+            result = None
+            for _ in range(retry_num):
+                result = func(*args, **kwargs)
+                if result:
+                    return result
+                time.sleep(delay)
+            return result
+        return inner
+    return wrapper
+
+
+@retry(5, 10)
 def get_token(username, password, device_id):
     try:
         campus_login = CampusLogin(phone_num=username, device_id=device_id)
