@@ -1,4 +1,4 @@
-requests==2.28.1
+requests~=2.25.1
 urllib3~=1.26.7
 json5~=0.9.6
-pycryptodome==3.15.0
+pycryptodome==3.12.0
