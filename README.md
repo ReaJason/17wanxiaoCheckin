@@ -166,3 +166,6 @@
 - 打卡失败显示 `您当前打卡内容与现有模板不符，请重新打卡~`，请使用最新的打卡 scf 压缩包重新部署
 - 等待反馈......
 
+## 🌟Star History
+
+[![Star History Chart](https://api.star-history.com/svg?repos=ReaJason/17wanxiaoCheckin&type=Date)](https://star-history.com/#ReaJason/17wanxiaoCheckin&Date)
