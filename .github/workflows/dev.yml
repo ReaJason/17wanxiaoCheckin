@@ -3,6 +3,8 @@ name: auto-build
 on:
   push:
     branches: master
+    paths:
+      - '**.py'
 
 jobs:
   build:
