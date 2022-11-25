@@ -22,7 +22,7 @@
 
 &emsp;&emsp;本项目使用了 `requests`、`json5`、`pycryptodome` 第三方库，2.0 版本迎来项目重构，打卡数据错误修改方法，不再是以前的修改代码（不懂代码容易改错或无法下手），而是通过直接修改配置文件即可，**本脚本使用虚拟 id 来登录，如果使用了本脚本就不要再用手机登录 app 了，如果一定要用 app 请不要使用当前脚本**。
 
-&emsp;&emsp;由于完美校园就设备做了验证，只允许一个设备登录，获取本机的 device_id 可参考 [此处](https://github.com/ReaJason/17wanxiaoCheckin/wiki/%E8%8E%B7%E5%8F%96%E6%9C%AC%E6%9C%BA-deviceId)
+&emsp;&emsp;由于完美校园就设备做了验证，只允许一个设备登录，获取本机的 device_id 可参考 [此处](https://github.com/ReaJason/17wanxiaoCheckin/wiki/%E8%8E%B7%E5%8F%96%E6%9C%AC%E6%9C%BA-device_id)
 
 
 
