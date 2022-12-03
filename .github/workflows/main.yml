@@ -41,7 +41,7 @@ jobs:
         with:
           tag_name: ${{ github.ref_name }}
           name: 17wanxiaoCheckin ${{ github.ref_name }}
-          body_path: 36/CHANGELOG.txt
+          body_path: 36/CHANGELOG.md
           draft: false
           prerelease: false
           files: |
