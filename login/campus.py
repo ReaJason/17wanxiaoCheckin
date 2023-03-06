@@ -103,8 +103,7 @@ class CampusLogin:
             'telephoneModel': self.login_info['telephoneModel'],
             'type': '1',
             'userName': self.login_info['phoneNum'],
-            'wanxiaoVersion': self.login_info['wanxiaoVersion'],
-            'yunyingshang': '07'
+            'wanxiaoVersion': self.login_info['wanxiaoVersion']
         }
         upload_args = {
             'session': self.login_info['sessionId'],
